@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QKeyEvent>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -118,5 +120,5 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 
 void MainWindow::on_battery_main_valueChanged(int value)
 {
-
+    value++;
 }
