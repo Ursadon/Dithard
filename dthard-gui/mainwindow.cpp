@@ -33,7 +33,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-
     if(event->key() == Qt::Key_Up)
     {
         ui->lb_UP->setPixmap(btn_UP);
@@ -50,7 +49,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         ui->lb_RIGHT->setPixmap(btn_UP);
     }
-
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
