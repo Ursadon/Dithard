@@ -1,0 +1,7 @@
+<RCC>
+    <qresource lang="ru_RU" prefix="/graphics">
+        <file>img/circle_blue.png</file>
+        <file>img/circle_green.png</file>
+        <file>img/icon.png</file>
+    </qresource>
+</RCC>
