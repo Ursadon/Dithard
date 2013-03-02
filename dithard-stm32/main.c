@@ -116,7 +116,7 @@ void SetupADC() {
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
 	ADC_InitStructure.ADC_NbrOfChannel = 1;
 
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_239Cycles5);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_17, 1, ADC_SampleTime_239Cycles5);
 	ADC_Init(ADC1, &ADC_InitStructure);
 
 	ADC_Cmd(ADC1, ENABLE);
@@ -172,14 +172,19 @@ void usartSendStr(char *str) {
 }
 
 void vPrintTime(void *pvParameters) {
-
+	int adv = 0;
+	char dst[5];
 	for (;;) {
 		GPIO_SetBits(GPIOC, GPIO_Pin_8);
 		vTaskDelay(500);
 		GPIO_ResetBits(GPIOC, GPIO_Pin_8);
 		vTaskDelay(500);
-	}
+		adv = ADC_GetConversionValue(ADC1);
+		itoa(adv,dst);
+		usartSendStr(dst);
+		usartSendStr("\r\n");
 
+	}
 }
 
 void vPrintTemp(void *pvParameters) {
@@ -189,7 +194,6 @@ void vPrintTemp(void *pvParameters) {
 		GPIO_ResetBits(GPIOC, GPIO_Pin_9);
 		vTaskDelay(321);
 	}
-
 }
 
 int main(void) {
