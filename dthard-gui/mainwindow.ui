@@ -194,7 +194,7 @@
      <string>Уровень сигнала:</string>
     </property>
    </widget>
-   <widget class="QProgressBar" name="progressBar">
+   <widget class="QProgressBar" name="signal_strenght">
     <property name="geometry">
      <rect>
       <x>260</x>

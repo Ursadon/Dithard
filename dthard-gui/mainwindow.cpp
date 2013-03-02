@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
                     "}"
                 );
     ui->battery_main->setStyleSheet(st_green);
+    ui->signal_strenght->setStyleSheet(st_green);
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +50,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         ui->lb_RIGHT->setPixmap(btn_UP);
     }
+
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
@@ -107,10 +109,9 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         y_coord--;
     }
     ui->battery_main->setValue(x_coord);
-
     if (x_coord < 30) {
         ui->battery_main->setStyleSheet(st_red);
-    } else if (x_coord <=65) {
+    } else if (x_coord >= 30 && x_coord <= 65) {
         ui->battery_main->setStyleSheet(st_yellow);
     } else if (x_coord > 65) {
         ui->battery_main->setStyleSheet(st_green);
