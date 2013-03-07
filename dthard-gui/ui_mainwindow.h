@@ -37,8 +37,8 @@ public:
     QLabel *lb_UP;
     QLabel *lb_LEFT;
     QLabel *lb_RIGHT;
-    QLabel *label;
-    QLabel *label_2;
+    QLabel *lbBattery_main;
+    QLabel *lbSignal_Strenght;
     QProgressBar *signal_strenght;
     QComboBox *comPortList;
     QPushButton *pbComPortOpen;
@@ -49,6 +49,16 @@ public:
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::NonModal);
         MainWindow->resize(400, 300);
+        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
+        MainWindow->setSizePolicy(sizePolicy);
+        MainWindow->setMinimumSize(QSize(400, 300));
+        MainWindow->setMaximumSize(QSize(400, 300));
+        QFont font;
+        font.setFamily(QStringLiteral("Segoe UI"));
+        MainWindow->setFont(font);
         QIcon icon;
         icon.addFile(QStringLiteral(":/graphics/img/icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -57,6 +67,7 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         battery_main = new QProgressBar(centralWidget);
         battery_main->setObjectName(QStringLiteral("battery_main"));
+        battery_main->setEnabled(false);
         battery_main->setGeometry(QRect(260, 30, 121, 20));
         battery_main->setStyleSheet(QLatin1String("QProgressBar::chunk {\n"
 "background-color: #00FF00;\n"
@@ -104,11 +115,11 @@ public:
         lb_LEFT = new QLabel(layoutWidget);
         lb_LEFT->setObjectName(QStringLiteral("lb_LEFT"));
         lb_LEFT->setEnabled(true);
-        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(lb_LEFT->sizePolicy().hasHeightForWidth());
-        lb_LEFT->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(lb_LEFT->sizePolicy().hasHeightForWidth());
+        lb_LEFT->setSizePolicy(sizePolicy1);
         lb_LEFT->setMinimumSize(QSize(40, 40));
         lb_LEFT->setMaximumSize(QSize(40, 40));
         lb_LEFT->setPixmap(QPixmap(QString::fromUtf8(":/graphics/img/circle_green.png")));
@@ -122,14 +133,17 @@ public:
 
         gridLayout->addWidget(lb_RIGHT, 1, 3, 1, 1);
 
-        label = new QLabel(centralWidget);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(260, 10, 91, 20));
-        label_2 = new QLabel(centralWidget);
-        label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(260, 60, 101, 20));
+        lbBattery_main = new QLabel(centralWidget);
+        lbBattery_main->setObjectName(QStringLiteral("lbBattery_main"));
+        lbBattery_main->setEnabled(false);
+        lbBattery_main->setGeometry(QRect(260, 10, 91, 20));
+        lbSignal_Strenght = new QLabel(centralWidget);
+        lbSignal_Strenght->setObjectName(QStringLiteral("lbSignal_Strenght"));
+        lbSignal_Strenght->setEnabled(false);
+        lbSignal_Strenght->setGeometry(QRect(260, 60, 101, 20));
         signal_strenght = new QProgressBar(centralWidget);
         signal_strenght->setObjectName(QStringLiteral("signal_strenght"));
+        signal_strenght->setEnabled(false);
         signal_strenght->setGeometry(QRect(260, 80, 118, 20));
         signal_strenght->setStyleSheet(QLatin1String("QProgressBar::chunk {\n"
 "background-color: #00FF00;\n"
@@ -169,8 +183,8 @@ public:
         lb_UP->setText(QString());
         lb_LEFT->setText(QString());
         lb_RIGHT->setText(QString());
-        label->setText(QApplication::translate("MainWindow", "\320\235\320\260\320\277\321\200\321\217\320\266\320\265\320\275\320\270\320\265 \320\220\320\232\320\221:", 0));
-        label_2->setText(QApplication::translate("MainWindow", "\320\243\321\200\320\276\320\262\320\265\320\275\321\214 \321\201\320\270\320\263\320\275\320\260\320\273\320\260:", 0));
+        lbBattery_main->setText(QApplication::translate("MainWindow", "\320\235\320\260\320\277\321\200\321\217\320\266\320\265\320\275\320\270\320\265 \320\220\320\232\320\221:", 0));
+        lbSignal_Strenght->setText(QApplication::translate("MainWindow", "\320\243\321\200\320\276\320\262\320\265\320\275\321\214 \321\201\320\270\320\263\320\275\320\260\320\273\320\260:", 0));
         comPortList->setCurrentText(QString());
         pbComPortOpen->setText(QApplication::translate("MainWindow", "Open", 0));
     } // retranslateUi

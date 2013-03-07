@@ -10,7 +10,7 @@
 #include <string.h>
 
 void itoa(int n, char s[]) {
-	int i,j,k, sign;
+	int i, j, k, sign;
 	char c;
 	if ((sign = n) < 0)
 		n = -n;
@@ -77,7 +77,9 @@ void SetSysClockTo24(void) {
 void SetupUSART() {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
+	RCC_APB2PeriphClockCmd(
+			RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO,
+			ENABLE);
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
@@ -91,8 +93,8 @@ void SetupUSART() {
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
 	USART_InitStructure.USART_Parity = USART_Parity_No;
-	USART_InitStructure.USART_HardwareFlowControl
-			= USART_HardwareFlowControl_None;
+	USART_InitStructure.USART_HardwareFlowControl =
+			USART_HardwareFlowControl_None;
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_Init(USART1, &USART_InitStructure);
 	USART_Cmd(USART1, ENABLE);
@@ -116,7 +118,8 @@ void SetupADC() {
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
 	ADC_InitStructure.ADC_NbrOfChannel = 1;
 
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_17, 1, ADC_SampleTime_239Cycles5);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_17, 1,
+			ADC_SampleTime_239Cycles5);
 	ADC_Init(ADC1, &ADC_InitStructure);
 
 	ADC_Cmd(ADC1, ENABLE);
@@ -180,19 +183,65 @@ void vPrintTime(void *pvParameters) {
 		GPIO_ResetBits(GPIOC, GPIO_Pin_8);
 		vTaskDelay(500);
 		adv = ADC_GetConversionValue(ADC1);
-		itoa(adv,dst);
+		itoa(adv, dst);
+		usartSendStr("1");
+		usartSendStr(" ");
 		usartSendStr(dst);
 		usartSendStr("\r\n");
 
 	}
 }
+int rx, j;
+char usart_rx[10 + 1] = { '\0' };
+int usart_rx_state = 0;
+int var = 0;
 
+#define SOH 1 // Start of heading
+#define EOT 4 // End of transmission
+#define ACK 6 //
+#define NAK 21 // Negative ACK
 void vPrintTemp(void *pvParameters) {
 	for (;;) {
-		GPIO_SetBits(GPIOC, GPIO_Pin_9);
-		vTaskDelay(321);
-		GPIO_ResetBits(GPIOC, GPIO_Pin_9);
-		vTaskDelay(321);
+//		GPIO_SetBits(GPIOC, GPIO_Pin_9);
+//		vTaskDelay(321);
+//		GPIO_ResetBits(GPIOC, GPIO_Pin_9);
+//		vTaskDelay(321);
+		if ((USART1->SR & USART_FLAG_RXNE) != (u16) RESET) {
+			rx = USART_ReceiveData(USART1);
+			if (rx == SOH) {
+				usartSendStr("2");
+				usartSendStr(" ");
+				usartSendStr("ACK");
+				usartSendStr("\r\n");
+				for (var = 0; var < 1000; ++var) {
+					if ((USART1->SR & USART_FLAG_RXNE) != (u16) RESET) {
+						usart_rx_state = 2;
+						break;
+					}
+				}
+				if (usart_rx_state == 2) {
+					if ((USART1->SR & USART_FLAG_RXNE) != (u16) RESET) {
+						rx = USART_ReceiveData(USART1);
+						if (j == 10) {
+							usart_rx[j] = rx;
+							j = 0;
+						} else {
+							usart_rx[j++] = rx;
+							break;
+						}
+						usart_rx[j] = '\0';
+					}
+				} else {
+					usartSendStr("2");
+					usartSendStr(" ");
+					usartSendStr("NACK");
+					usartSendStr("\r\n");
+				}
+				usart_rx_state = 0;
+			}
+		}
+
+		vTaskDelay(10);
 	}
 }
 
@@ -205,10 +254,10 @@ int main(void) {
 	SetupADC();
 	//usartSendStr("[KERN] ADC driver loaded\r\n");
 
-	xTaskCreate( vPrintTime, ( signed char * ) "vPrintTime", configMINIMAL_STACK_SIZE, NULL, 0,
-			( xTaskHandle * ) NULL);
-	xTaskCreate( vPrintTemp, ( signed char * ) "vPrintTemp", configMINIMAL_STACK_SIZE, NULL, 0,
-			( xTaskHandle * ) NULL);
+	xTaskCreate( vPrintTime, ( signed char * ) "vPrintTime",
+			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+	xTaskCreate( vPrintTemp, ( signed char * ) "vPrintTemp",
+			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
 	//xTaskCreate( vReadDistance, ( signed char * ) "vReadDistance", configMINIMAL_STACK_SIZE, NULL, 0,
 	//		( xTaskHandle * ) NULL);
 	//usartSendStr("[KERN] System loaded, starting sheduler...\r\n");

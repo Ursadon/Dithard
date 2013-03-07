@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowFlags( (windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
     x_coord = 0;
     y_coord = 0;
     port_opened = FALSE;
@@ -54,39 +55,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
-    QString st_red = QString (
-                    "QProgressBar::chunk {"
-                    "background-color: #FF0000;"
-                    "}"
-                    "QProgressBar {"
-                    "border: 1px solid grey;"
-                    "border-radius: 2px;"
-                    "text-align: center;"
-                    "background: #eeeeee;"
-                    "}"
-                );
-    QString st_yellow = (
-                    "QProgressBar::chunk {"
-                    "background-color: #FFFF00;"
-                    "}"
-                    "QProgressBar {"
-                    "border: 1px solid grey;"
-                    "border-radius: 2px;"
-                    "text-align: center;"
-                    "background: #eeeeee;"
-                    "}"
-                );
-    QString st_green = QString (
-                    "QProgressBar::chunk {"
-                    "background-color: #00FF00;"
-                    "}"
-                    "QProgressBar {"
-                    "border: 1px solid grey;"
-                    "border-radius: 2px;"
-                    "text-align: center;"
-                    "background: #eeeeee;"
-                    "}"
-                );
     if(event->key() == Qt::Key_Up)
     {
         ui->lb_UP->setPixmap(btn_DOWN);
@@ -112,13 +80,6 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         y_coord--;
     }
     ui->battery_main->setValue(x_coord);
-    if (x_coord < 30) {
-        ui->battery_main->setStyleSheet(st_red);
-    } else if (x_coord >= 30 && x_coord <= 65) {
-        ui->battery_main->setStyleSheet(st_yellow);
-    } else if (x_coord > 65) {
-        ui->battery_main->setStyleSheet(st_green);
-    }
 }
 
 void MainWindow::on_pbComPortOpen_clicked()
@@ -134,40 +95,48 @@ void MainWindow::on_pbComPortOpen_clicked()
         }
 
         if (!serial.setBaudRate(QSerialPort::Baud9600)) {
-//            processError(tr("Can't set baud rate 9600 baud to port %1, error code %2")
-//                         .arg(serial.portName()).arg(serial.error()));
+            //            processError(tr("Can't set baud rate 9600 baud to port %1, error code %2")
+            //                         .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
         if (!serial.setDataBits(QSerialPort::Data8)) {
-//            processError(tr("Can't set 8 data bits to port %1, error code %2")
-//                         .arg(serial.portName()).arg(serial.error()));
+            //            processError(tr("Can't set 8 data bits to port %1, error code %2")
+            //                         .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
         if (!serial.setParity(QSerialPort::NoParity)) {
-//            processError(tr("Can't set no patity to port %1, error code %2")
-//                         .arg(serial.portName()).arg(serial.error()));
+            //            processError(tr("Can't set no patity to port %1, error code %2")
+            //                         .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
         if (!serial.setStopBits(QSerialPort::OneStop)) {
-//            processError(tr("Can't set 1 stop bit to port %1, error code %2")
-//                         .arg(serial.portName()).arg(serial.error()));
+            //            processError(tr("Can't set 1 stop bit to port %1, error code %2")
+            //                         .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
         if (!serial.setFlowControl(QSerialPort::NoFlowControl)) {
-//            processError(tr("Can't set no flow control to port %1, error code %2")
-//                         .arg(serial.portName()).arg(serial.error()));
+            //            processError(tr("Can't set no flow control to port %1, error code %2")
+            //                         .arg(serial.portName()).arg(serial.error()));
             return;
         }
         out << "PORT OPENED" << endl;
+        ui->pbComPortOpen->setText("Close");
+        ui->battery_main->setEnabled(TRUE);
+        ui->lbBattery_main->setEnabled(TRUE);
     } else {
         ui->comPortList->setEnabled(true);
         port_opened = FALSE;
         serial.close();
         out << "PORT CLOSED" << endl;
+        ui->pbComPortOpen->setText("Open");
+        ui->battery_main->setValue(0);
+        ui->signal_strenght->setValue(0);
+        ui->battery_main->setEnabled(FALSE);
+        ui->lbBattery_main->setEnabled(FALSE);
     }
 
 }
@@ -182,10 +151,67 @@ void MainWindow::readRequest()
 
         // Грязная магия - парсим данные. Делим массив на две части: до пробела (команда) и после (параметры)
         // Затем очищаем параметры от \r\n, и преобразуем в unsigned int
-        uint adc_value = bytes.split('\r').at(0).toUInt();
-        ui->battery_main->setValue(adc_value);
-         bytes.clear();
+
+        uint rx_command = bytes.split(' ').at(0).toUInt();
+        uint rx_value = bytes.split(' ').at(1).split('\r').at(0).toUInt();
+        switch (rx_command) {
+        case 1:
+            ui->battery_main->setValue(rx_value);
+            break;
+        case 2:
+            ui->signal_strenght->setValue(rx_value);
+            break;
+        default:
+            break;
+        }
+        bytes.clear();
     } else {
         bytes += temp_data;
+    }
+}
+
+void MainWindow::on_battery_main_valueChanged(int value)
+{
+    int value_maximum = ui->battery_main->maximum();
+    int value_percent = value * 100 / value_maximum * 10000;
+    QString st_red = QString (
+                "QProgressBar::chunk {"
+                "background-color: #FF0000;"
+                "}"
+                "QProgressBar {"
+                "border: 1px solid grey;"
+                "border-radius: 2px;"
+                "text-align: center;"
+                "background: #eeeeee;"
+                "}"
+                );
+    QString st_yellow = (
+                "QProgressBar::chunk {"
+                "background-color: #FFFF00;"
+                "}"
+                "QProgressBar {"
+                "border: 1px solid grey;"
+                "border-radius: 2px;"
+                "text-align: center;"
+                "background: #eeeeee;"
+                "}"
+                );
+    QString st_green = QString (
+                "QProgressBar::chunk {"
+                "background-color: #00FF00;"
+                "}"
+                "QProgressBar {"
+                "border: 1px solid grey;"
+                "border-radius: 2px;"
+                "text-align: center;"
+                "background: #eeeeee;"
+                "}"
+                );
+    if (value_percent < 33) {
+        ui->battery_main->setStyleSheet(st_red);
+    } else if (value_percent >= 33 && value_percent <= 65) {
+        ui->battery_main->setStyleSheet(st_yellow);
+    } else if (value_percent > 65) {
+        ui->battery_main->setStyleSheet(st_green);
     }
 }

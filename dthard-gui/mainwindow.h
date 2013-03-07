@@ -40,6 +40,7 @@ protected:
 private slots:
     void on_pbComPortOpen_clicked();
     void readRequest();
+    void on_battery_main_valueChanged(int value);
 };
 
 #endif // MAINWINDOW_H
