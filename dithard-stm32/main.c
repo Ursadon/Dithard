@@ -199,11 +199,11 @@ void vPrintTemp(void *pvParameters) {
 int main(void) {
 	//SetSysClockTo24();
 	SetupUSART();
-	usartSendStr("[KERN] USART driver loaded\r\n");
+	//usartSendStr("[KERN] USART driver loaded\r\n");
 	SetupLED();
-	usartSendStr("[KERN] LED driver loaded\r\n");
+	//usartSendStr("[KERN] LED driver loaded\r\n");
 	SetupADC();
-	usartSendStr("[KERN] ADC driver loaded\r\n");
+	//usartSendStr("[KERN] ADC driver loaded\r\n");
 
 	xTaskCreate( vPrintTime, ( signed char * ) "vPrintTime", configMINIMAL_STACK_SIZE, NULL, 0,
 			( xTaskHandle * ) NULL);
@@ -211,7 +211,7 @@ int main(void) {
 			( xTaskHandle * ) NULL);
 	//xTaskCreate( vReadDistance, ( signed char * ) "vReadDistance", configMINIMAL_STACK_SIZE, NULL, 0,
 	//		( xTaskHandle * ) NULL);
-	usartSendStr("[KERN] System loaded, starting sheduler...\r\n");
+	//usartSendStr("[KERN] System loaded, starting sheduler...\r\n");
 	vTaskStartScheduler();
 }
 

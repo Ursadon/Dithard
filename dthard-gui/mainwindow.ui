@@ -33,6 +33,20 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QProgressBar::chunk {
+background-color: #00FF00;
+}
+QProgressBar {
+border: 1px solid grey;
+border-radius: 2px;
+text-align: center;
+background: #eeeeee;
+}</string>
+    </property>
+    <property name="maximum">
+     <number>3700</number>
+    </property>
     <property name="value">
      <number>0</number>
     </property>
@@ -43,7 +57,7 @@
      <enum>QProgressBar::TopToBottom</enum>
     </property>
     <property name="format">
-     <string>%p мВ</string>
+     <string>%v мВ</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">
@@ -203,8 +217,63 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QProgressBar::chunk {
+background-color: #00FF00;
+}
+QProgressBar {
+border: 1px solid grey;
+border-radius: 2px;
+text-align: center;
+background: #eeeeee;
+}</string>
+    </property>
+    <property name="maximum">
+     <number>3700</number>
+    </property>
     <property name="value">
-     <number>24</number>
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comPortList">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>270</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="currentText">
+     <string comment="Выберите порт" extracomment="Выберите порт"/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbComPortOpen">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>270</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::NoContextMenu</enum>
+    </property>
+    <property name="text">
+     <string>Open</string>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>
