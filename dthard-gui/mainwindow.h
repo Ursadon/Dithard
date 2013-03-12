@@ -25,7 +25,7 @@ private:
     QPixmap btn_DOWN;
     int x_coord;
     int y_coord;
-    bool packet_started;
+    bool parital_packet;
     bool port_opened;
     QList<QSerialPortInfo> serialPortInfoList;
     QByteArray bytes;
