@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags( (windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
     x_coord = 0;
     y_coord = 0;
+    packet_started = FALSE;
     port_opened = FALSE;
     btn_UP.load(":/graphics/img/circle_blue.png");
     btn_DOWN.load(":/graphics/img/circle_green.png");
@@ -144,29 +145,34 @@ void MainWindow::on_pbComPortOpen_clicked()
 void MainWindow::readRequest()
 {
     QTextStream out(stdout);
-    QByteArray temp_data = serial.readLine(); // Заполняем массив данными
-    if (temp_data.indexOf("\n") != -1) {
-        // Получили переход на новую строку - значит приняли данные
-        bytes += temp_data;
+    QByteArray temp_data = serial.readAll(); // Заполняем массив данными
+    int fend_offset = temp_data.indexOf(0xC0);
+    int fend_count = temp_data.count(0xC0);
+    if(fend_count > 1) {
+        out << "multi-packet " << QString::number(fend_count) << endl;
+        for (int var = 1; var <= fend_count; var++) {
+            // парсим каждый пакет
 
-        // Грязная магия - парсим данные. Делим массив на две части: до пробела (команда) и после (параметры)
-        // Затем очищаем параметры от \r\n, и преобразуем в unsigned int
-
-        uint rx_command = bytes.split(' ').at(0).toUInt();
-        uint rx_value = bytes.split(' ').at(1).split('\r').at(0).toUInt();
-        switch (rx_command) {
-        case 1:
-            ui->battery_main->setValue(rx_value);
-            break;
-        case 2:
-            ui->signal_strenght->setValue(rx_value);
-            break;
-        default:
-            break;
         }
-        bytes.clear();
-    } else {
+    }
+    if (fend_offset != -1) {
+        // Скинули всё, что идёт после FEND в пакет
+        bytes.append(temp_data.mid(fend_offset));
+        // Если полностью получили заголовок - то парсим его
+        packet_started = TRUE;
+    } else if(packet_started == TRUE) {
         bytes += temp_data;
+    }
+    if (bytes.size() >= 4) {
+        if(bytes.at(1) <= bytes.size()) {
+            adc.append(bytes.right(2));
+            int size = ((static_cast<unsigned int>(adc.at(0)) & 0xFF) << 8)
+                    + (static_cast<unsigned int>(adc.at(1)) & 0xFF);
+            out << "RCVD PACKET! " << bytes.size() << " : " <<  QString::number(size) << endl;
+            adc.clear();
+            bytes.clear();
+            packet_started = FALSE;
+        }
     }
 }
 
@@ -214,4 +220,9 @@ void MainWindow::on_battery_main_valueChanged(int value)
     } else if (value_percent > 65) {
         ui->battery_main->setStyleSheet(st_green);
     }
+}
+
+void MainWindow::on_pushButton_clicked() {
+    char SOH[] = {'\1'};
+    serial.write(SOH);
 }

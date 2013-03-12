@@ -19,6 +19,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
@@ -42,6 +43,8 @@ public:
     QProgressBar *signal_strenght;
     QComboBox *comPortList;
     QPushButton *pbComPortOpen;
+    QPushButton *pushButton;
+    QPlainTextEdit *plainTextEdit;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -167,6 +170,12 @@ public:
         pbComPortOpen->setFocusPolicy(Qt::NoFocus);
         pbComPortOpen->setContextMenuPolicy(Qt::NoContextMenu);
         pbComPortOpen->setFlat(false);
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setGeometry(QRect(60, 90, 75, 23));
+        plainTextEdit = new QPlainTextEdit(centralWidget);
+        plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
+        plainTextEdit->setGeometry(QRect(40, 150, 161, 101));
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
@@ -187,6 +196,7 @@ public:
         lbSignal_Strenght->setText(QApplication::translate("MainWindow", "\320\243\321\200\320\276\320\262\320\265\320\275\321\214 \321\201\320\270\320\263\320\275\320\260\320\273\320\260:", 0));
         comPortList->setCurrentText(QString());
         pbComPortOpen->setText(QApplication::translate("MainWindow", "Open", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0));
     } // retranslateUi
 
 };

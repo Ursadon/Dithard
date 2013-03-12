@@ -1,13 +1,23 @@
 #include "stm32f10x.h"
+#include "stm32f10x_dma.h"
 #include "stm32f10x_gpio.h"
 #include "stm32f10x_rcc.h"
 #include "stm32f10x_usart.h"
 #include "stm32f10x_adc.h"
 #include "stm32f10x_gpio.h"
+#include "stm32f10x_crc.h"
 #include "stm32f10x_flash.h"
+#include "misc.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include <string.h>
+
+#define SOH 1 // Start of heading
+#define EOT 4 // End of transmission
+#define ACK 6 //
+#define NAK 21 // Negative ACK
+
+int usart_rx_buff[8];
 
 void itoa(int n, char s[]) {
 	int i, j, k, sign;
@@ -74,9 +84,27 @@ void SetSysClockTo24(void) {
 	}
 }
 
+void NVIC_Configuration(void) {
+	NVIC_InitTypeDef NVIC_InitStructure;
+#ifdef  VECT_TAB_RAM
+	/* Set the Vector Table base location at 0x20000000 */
+	NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
+#else  /* VECT_TAB_FLASH  */
+	/* Set the Vector Table base location at 0x08000000 */
+	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
+#endif
+	/* Enable DMA1 channel6 IRQ */
+	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel5_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+}
+
 void SetupUSART() {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
+	DMA_InitTypeDef DMA_InitStructure;
 	RCC_APB2PeriphClockCmd(
 			RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO,
 			ENABLE);
@@ -98,6 +126,28 @@ void SetupUSART() {
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_Init(USART1, &USART_InitStructure);
 	USART_Cmd(USART1, ENABLE);
+	USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
+
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+	DMA_DeInit(DMA1_Channel5);
+	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&USART1->DR);
+	DMA_InitStructure.DMA_MemoryBaseAddr = usart_rx_buff;
+	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
+	DMA_InitStructure.DMA_BufferSize = sizeof(usart_rx_buff)/4;
+	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
+	DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+	DMA_InitStructure.DMA_Priority = DMA_Priority_Low;
+	DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+	DMA_Init(DMA1_Channel5, &DMA_InitStructure);
+
+	NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+	DMA_ITConfig(DMA1_Channel5, DMA_IT_TC | DMA_IT_TE, ENABLE);
+	DMA_Cmd(DMA1_Channel5, ENABLE);
+
+	 RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
 }
 
 void SetupADC() {
@@ -159,7 +209,7 @@ void SetupRangeMeter() {
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 }
 
-void usartSendChr(char data) {
+void usartSendChr(uint16_t data) {
 	while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
 		;
 	USART_SendData(USART1, data);
@@ -173,94 +223,78 @@ void usartSendStr(char *str) {
 		usartSendChr(str[i++]);
 	}
 }
+char dst[256];
+unsigned int usartSendPacket(int cmd, char *data) {
+	//uint32_t crc = CRC_CalcBlockCRC(data,11);
+	short j = 0;
+	//for (j = 2; j < 11; j++) {
+	//	packet[j] = data[j-2];
+	//}
+	usartSendChr(SOH);
+	usartSendChr(sizeof(data)/sizeof(*dst));
+	for (j = 0; j < sizeof(data); j++) {
+		usartSendChr(data[j]);
+	}
+	usartSendStr("\n");
+	//usartSendChr(EOT);
+	return 0;
 
+}
+void usartSendByte(int cmd, uint16_t word) {
+	uint8_t b1 = word & 0xFF;
+	uint8_t b2 = word >> 8;
+	usartSendChr(0xC0);
+	usartSendChr(5);
+	usartSendChr(51);
+	usartSendChr(b2);
+	usartSendChr(b1);
+
+	//usartSendChr(EOT);
+
+}
 void vPrintTime(void *pvParameters) {
-	int adv = 0;
-	char dst[5];
+	uint16_t adc;
+
 	for (;;) {
 		GPIO_SetBits(GPIOC, GPIO_Pin_8);
 		vTaskDelay(500);
 		GPIO_ResetBits(GPIOC, GPIO_Pin_8);
 		vTaskDelay(500);
-		adv = ADC_GetConversionValue(ADC1);
-		itoa(adv, dst);
-		usartSendStr("1");
-		usartSendStr(" ");
-		usartSendStr(dst);
-		usartSendStr("\r\n");
-
+		adc = ADC_GetConversionValue(ADC1);
+		//itoa(adv, dst);
+		usartSendByte(50, adc);
 	}
 }
-int rx, j;
-char usart_rx[10 + 1] = { '\0' };
-int usart_rx_state = 0;
-int var = 0;
 
-#define SOH 1 // Start of heading
-#define EOT 4 // End of transmission
-#define ACK 6 //
-#define NAK 21 // Negative ACK
 void vPrintTemp(void *pvParameters) {
 	for (;;) {
-//		GPIO_SetBits(GPIOC, GPIO_Pin_9);
-//		vTaskDelay(321);
-//		GPIO_ResetBits(GPIOC, GPIO_Pin_9);
-//		vTaskDelay(321);
-		if ((USART1->SR & USART_FLAG_RXNE) != (u16) RESET) {
-			rx = USART_ReceiveData(USART1);
-			if (rx == SOH) {
-				usartSendStr("2");
-				usartSendStr(" ");
-				usartSendStr("ACK");
-				usartSendStr("\r\n");
-				for (var = 0; var < 1000; ++var) {
-					if ((USART1->SR & USART_FLAG_RXNE) != (u16) RESET) {
-						usart_rx_state = 2;
-						break;
-					}
-				}
-				if (usart_rx_state == 2) {
-					if ((USART1->SR & USART_FLAG_RXNE) != (u16) RESET) {
-						rx = USART_ReceiveData(USART1);
-						if (j == 10) {
-							usart_rx[j] = rx;
-							j = 0;
-						} else {
-							usart_rx[j++] = rx;
-							break;
-						}
-						usart_rx[j] = '\0';
-					}
-				} else {
-					usartSendStr("2");
-					usartSendStr(" ");
-					usartSendStr("NACK");
-					usartSendStr("\r\n");
-				}
-				usart_rx_state = 0;
-			}
-		}
-
-		vTaskDelay(10);
+		GPIO_SetBits(GPIOC, GPIO_Pin_9);
+		vTaskDelay(321);
+		GPIO_ResetBits(GPIOC, GPIO_Pin_9);
+		vTaskDelay(321);
 	}
 }
 
 int main(void) {
-	//SetSysClockTo24();
+	SetSysClockTo24();
+	NVIC_Configuration();
 	SetupUSART();
-	//usartSendStr("[KERN] USART driver loaded\r\n");
 	SetupLED();
-	//usartSendStr("[KERN] LED driver loaded\r\n");
 	SetupADC();
-	//usartSendStr("[KERN] ADC driver loaded\r\n");
 
-	xTaskCreate( vPrintTime, ( signed char * ) "vPrintTime",
-			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	xTaskCreate( vPrintTemp, ( signed char * ) "vPrintTemp",
-			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	//xTaskCreate( vReadDistance, ( signed char * ) "vReadDistance", configMINIMAL_STACK_SIZE, NULL, 0,
-	//		( xTaskHandle * ) NULL);
-	//usartSendStr("[KERN] System loaded, starting sheduler...\r\n");
+	xTaskCreate( vPrintTime, ( signed char * ) "vPrintTime", configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+	xTaskCreate( vPrintTemp, ( signed char * ) "vPrintTemp", configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
 	vTaskStartScheduler();
+	return 0;
+}
+
+void DMA1_Channel5_IRQHandler(void) {
+	if (DMA1->ISR & DMA_ISR_TCIF5) {
+		DMA_ClearITPendingBit(DMA1_IT_TC5);
+	}
+
+	if (DMA1->ISR & DMA_ISR_TEIF5) {
+		DMA_ClearITPendingBit(DMA1_IT_TE5);
+	}
 }
 
