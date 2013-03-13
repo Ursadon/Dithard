@@ -240,6 +240,7 @@ unsigned int usartSendPacket(int cmd, char *data) {
 	return 0;
 
 }
+
 void usartSendByte(int cmd, uint16_t word) {
 	uint8_t b1 = word & 0xFF;
 	uint8_t b2 = word >> 8;
@@ -252,6 +253,7 @@ void usartSendByte(int cmd, uint16_t word) {
 	//usartSendChr(EOT);
 
 }
+
 void vPrintTime(void *pvParameters) {
 	uint16_t adc;
 

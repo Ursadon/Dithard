@@ -90,8 +90,8 @@
     <File name="stm_lib/inc/stm32f10x_flash.h" path="stm_lib/inc/stm32f10x_flash.h" type="1"/>
     <File name="syscalls/syscalls.c" path="syscalls/syscalls.c" type="1"/>
     <File name="cmsis/core_cm3.c" path="cmsis/core_cm3.c" type="1"/>
-    <File name="stm_lib/src/stm32f10x_adc.c" path="stm_lib/src/stm32f10x_adc.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_dma.h" path="stm_lib/inc/stm32f10x_dma.h" type="1"/>
+    <File name="stm_lib/src/stm32f10x_adc.c" path="stm_lib/src/stm32f10x_adc.c" type="1"/>
     <File name="FreeRTOS/list.c" path="FreeRTOS/list.c" type="1"/>
     <File name="FreeRTOS/include/portmacro.h" path="FreeRTOS/include/portmacro.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_usart.c" path="stm_lib/src/stm32f10x_usart.c" type="1"/>
@@ -102,8 +102,8 @@
     <File name="stm_lib/inc/stm32f10x_usart.h" path="stm_lib/inc/stm32f10x_usart.h" type="1"/>
     <File name="FreeRTOS/include/mpu_wrappers.h" path="FreeRTOS/include/mpu_wrappers.h" type="1"/>
     <File name="cmsis_boot/system_stm32f10x.c" path="cmsis_boot/system_stm32f10x.c" type="1"/>
-    <File name="FreeRTOS/heap_2.c" path="FreeRTOS/heap_2.c" type="1"/>
     <File name="stm_lib/inc/misc.h" path="stm_lib/inc/misc.h" type="1"/>
+    <File name="FreeRTOS/heap_2.c" path="FreeRTOS/heap_2.c" type="1"/>
     <File name="FreeRTOS/include/StackMacros.h" path="FreeRTOS/include/StackMacros.h" type="1"/>
     <File name="FreeRTOS/include/task.h" path="FreeRTOS/include/task.h" type="1"/>
     <File name="FreeRTOS/include/queue.h" path="FreeRTOS/include/queue.h" type="1"/>

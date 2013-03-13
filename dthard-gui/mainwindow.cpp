@@ -167,14 +167,17 @@ void MainWindow::readRequest()
             fend_header_end = fend_offset_array.at(var+1);
             fend_header_size = fend_header_end - fend_header_start;
             out << "FEND boundaries at: " << QString::number(fend_header_start) << " + " << QString::number(fend_header_end) << endl;
+            // Заголовок не в начале - значит в начале данные от старого пакета?
+            if (fend_header_start > 0 && parital_packet) {
+                bytes += temp_data.left(fend_header_start);
+            }
+            // Мы получили заголовок?
             if (fend_header_size >= 4) {
-                bytes = temp_data.mid(fend_header_start,fend_header_size);
+                // Извлекаем его
+                bytes += temp_data.mid(fend_header_start,fend_header_size);
                 if(temp_data.at(fend_header_start+1) <= bytes.size()) {
-                    adc.append(bytes.right(2));
-                    int size = ((static_cast<unsigned int>(adc.at(0)) & 0xFF) << 8)
-                            + (static_cast<unsigned int>(adc.at(1)) & 0xFF);
-                    out << "RCVD PACKET! " << bytes.size() << " : " <<  QString::number(size) << endl;
-                    adc.clear();
+                    out << "RCVD PACKET! " << bytes.size()<< endl;
+                    process_packet(bytes);
                     bytes.clear();
                     parital_packet = FALSE;
                 }
@@ -194,16 +197,29 @@ void MainWindow::readRequest()
         }
         if (bytes.size() >= 4) {
             if(bytes.at(1) <= bytes.size()) {
-                adc.append(bytes.right(2));
-                int size = ((static_cast<unsigned int>(adc.at(0)) & 0xFF) << 8)
-                        + (static_cast<unsigned int>(adc.at(1)) & 0xFF);
-                out << "RCVD PACKET! " << bytes.size() << " : " <<  QString::number(size) << endl;
-                adc.clear();
+                out << "RCVD PACKET! " << bytes.size() << endl;
+                process_packet(bytes);
                 bytes.clear();
                 parital_packet = FALSE;
             }
         }
     }
+}
+
+void MainWindow::process_packet(QByteArray packet) {
+    QByteArray pkt;
+    pkt = packet.right(2);
+    char cmd = packet.at(2);
+    switch (cmd) {
+    case 51:
+
+        break;
+    default:
+        break;
+    }
+    int val = ((static_cast<unsigned int>(pkt.at(0)) & 0xFF) << 8)
+            + (static_cast<unsigned int>(pkt.at(1)) & 0xFF);
+    ui->battery_main->setValue(val);
 }
 
 void MainWindow::on_battery_main_valueChanged(int value)

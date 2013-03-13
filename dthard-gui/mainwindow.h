@@ -29,13 +29,12 @@ private:
     bool port_opened;
     QList<QSerialPortInfo> serialPortInfoList;
     QByteArray bytes;
-    QByteArray adc;
     QSerialPort serial;
     QString st_yellow;
     QString st_green;
     QString st_red;
 
-
+    void process_packet(QByteArray packet);
 protected:
     void keyPressEvent(QKeyEvent *);
     void keyReleaseEvent(QKeyEvent *);
