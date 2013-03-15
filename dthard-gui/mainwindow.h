@@ -33,8 +33,8 @@ private:
     QString st_yellow;
     QString st_green;
     QString st_red;
+    int process_packet(QByteArray packet);
 
-    void process_packet(QByteArray packet);
 protected:
     void keyPressEvent(QKeyEvent *);
     void keyReleaseEvent(QKeyEvent *);

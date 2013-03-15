@@ -244,9 +244,10 @@ unsigned int usartSendPacket(int cmd, char *data) {
 void usartSendByte(int cmd, uint16_t word) {
 	uint8_t b1 = word & 0xFF;
 	uint8_t b2 = word >> 8;
-	usartSendChr(0xC0);
-	usartSendChr(5);
-	usartSendChr(51);
+	usartSendChr(0xC0); // FEND
+	usartSendChr(200); // ADDRESS
+	usartSendChr(51); // CMD
+	usartSendChr(6); // N
 	usartSendChr(b2);
 	usartSendChr(b1);
 

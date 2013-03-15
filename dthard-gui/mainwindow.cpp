@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QTextStream>
+#include <QDebug>
 #include <QKeyEvent>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
@@ -85,13 +85,12 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 
 void MainWindow::on_pbComPortOpen_clicked()
 {
-    QTextStream out(stdout);
     if(!port_opened) {
         ui->comPortList->setEnabled(false);
         port_opened = TRUE;
         serial.setPortName(ui->comPortList->currentText());
         if (!serial.open(QIODevice::ReadWrite)) {
-            out << tr("Can't open %1, error code %2").arg(serial.portName()).arg(serial.error()) << endl;
+            qDebug() << tr("Can't open %1, error code %2").arg(serial.portName()).arg(serial.error()) << endl;
             return;
         }
 
@@ -124,7 +123,7 @@ void MainWindow::on_pbComPortOpen_clicked()
             //                         .arg(serial.portName()).arg(serial.error()));
             return;
         }
-        out << "PORT OPENED" << endl;
+        qDebug() << "PORT OPENED" << endl;
         ui->pbComPortOpen->setText("Close");
         ui->battery_main->setEnabled(TRUE);
         ui->lbBattery_main->setEnabled(TRUE);
@@ -132,7 +131,7 @@ void MainWindow::on_pbComPortOpen_clicked()
         ui->comPortList->setEnabled(true);
         port_opened = FALSE;
         serial.close();
-        out << "PORT CLOSED" << endl;
+        qDebug() << "PORT CLOSED" << endl;
         ui->pbComPortOpen->setText("Open");
         ui->battery_main->setValue(0);
         ui->signal_strenght->setValue(0);
@@ -143,83 +142,114 @@ void MainWindow::on_pbComPortOpen_clicked()
 }
 
 void MainWindow::readRequest()
-{
-    QTextStream out(stdout);
-    QByteArray temp_data = serial.readAll(); // Заполняем массив данными
-    int fend_offset = temp_data.indexOf(0xC0);
-    int fend_count = temp_data.count(0xC0);
-    char fend_header_start, fend_header_end, fend_header_size;
-    char x,y = 0;
-    QByteArray fend_offset_array;
+{    QByteArray temp_data = serial.readAll(); // Заполняем массив данными
+     int fend_offset = temp_data.indexOf(0xC0);
+      int fend_count = temp_data.count(0xC0);
+       char fend_header_start, fend_header_end, fend_header_size;
+        char x,y = 0;
+         QByteArray fend_offset_array;
 
-    if(fend_count > 1) {
-        fend_offset_array.append(temp_data.indexOf(0xC0));
-        out << "multi-packet RX total:" << QString::number(fend_count) << endl;
-        for (int var = 0; var < fend_count; var++) {
-            y = fend_offset_array.at(var)+1;
-            x = temp_data.indexOf(0xC0,y);
-            fend_offset_array.append(x);
-            //out << "FEND at: " << QString::number(fend_offset_array.at(var)) << endl;
-        }
-        // Теперь у нас есть массив с позициями заголовков
-        for (int var = 0; var < fend_count; var++) {
-            fend_header_start = fend_offset_array.at(var);
-            fend_header_end = fend_offset_array.at(var+1);
-            fend_header_size = fend_header_end - fend_header_start;
-            out << "FEND boundaries at: " << QString::number(fend_header_start) << " + " << QString::number(fend_header_end) << endl;
-            // Заголовок не в начале - значит в начале данные от старого пакета?
-            if (fend_header_start > 0 && parital_packet) {
-                bytes += temp_data.left(fend_header_start);
-            }
-            // Мы получили заголовок?
-            if (fend_header_size >= 4) {
-                // Извлекаем его
-                bytes += temp_data.mid(fend_header_start,fend_header_size);
-                if(temp_data.at(fend_header_start+1) <= bytes.size()) {
-                    out << "RCVD PACKET! " << bytes.size()<< endl;
-                    process_packet(bytes);
-                    bytes.clear();
-                    parital_packet = FALSE;
-                }
-            } else {
-                parital_packet = TRUE;
-            }
-        }
-        fend_offset_array.clear();
-    } else {
-        if (fend_offset != -1) {
-            // Скинули всё, что идёт после FEND в пакет
-            bytes.append(temp_data.mid(fend_offset));
-            // Если полностью получили заголовок - то парсим его
-            parital_packet = TRUE;
-        } else if(parital_packet == TRUE) {
-            bytes += temp_data;
-        }
-        if (bytes.size() >= 4) {
-            if(bytes.at(1) <= bytes.size()) {
-                out << "RCVD PACKET! " << bytes.size() << endl;
-                process_packet(bytes);
-                bytes.clear();
-                parital_packet = FALSE;
-            }
-        }
-    }
+          if(fend_count > 1) {
+              qDebug() << "multi-packet RX total:" << QString::number(fend_count) << endl;
+              fend_offset_array.append(temp_data.indexOf(0xC0));
+              for (int var = 0; var < fend_count; var++) {
+                  y = fend_offset_array.at(var)+1;
+                  x = temp_data.indexOf(0xC0,y);
+                  fend_offset_array.append(x);
+              }
+              // Теперь у нас есть массив с позициями заголовков
+              for (int var = 0; var < fend_count; var++) {
+                  fend_header_start = fend_offset_array.at(var);
+                  fend_header_end = fend_offset_array.at(var+1);
+                  fend_header_size = fend_header_end - fend_header_start;
+                  qDebug() << "FEND boundaries at: " << QString::number(fend_header_start) << " + " << QString::number(fend_header_end) << endl;
+                  // Заголовок не в начале - значит в начале данные от старого пакета?
+                  if (fend_header_start > 0 && parital_packet) {
+                      bytes += temp_data.left(fend_header_start);
+                  }
+                  // Мы получили заголовок?
+                  if (fend_header_size >= 4) {
+                      // Извлекаем его
+                      bytes += temp_data.mid(fend_header_start,fend_header_size);
+                      if(temp_data.at(fend_header_start+3) <= bytes.size()) {
+                          qDebug() << "RCVD PACKET! " << bytes.size()<< endl;
+                          process_packet(bytes);
+                          bytes.clear();
+                          parital_packet = FALSE;
+                      }
+                  } else {
+                      parital_packet = TRUE;
+                  }
+              }
+              fend_offset_array.clear();
+          } else {
+              if (fend_offset != -1) {
+                  // Скинули всё, что идёт после FEND в пакет
+                  bytes.append(temp_data.mid(fend_offset));
+                  // Если полностью получили заголовок - то парсим его
+                  parital_packet = TRUE;
+              } else if(parital_packet == TRUE) {
+                  bytes += temp_data;
+              }
+              if (bytes.size() >= 4) {
+                  if(bytes.at(3) <= bytes.size()) {
+                      qDebug() << "RCVD PACKET! " << bytes.size() << endl;
+                      process_packet(bytes);
+                      bytes.clear();
+                      parital_packet = FALSE;
+                  }
+              }
+          }
 }
 
-void MainWindow::process_packet(QByteArray packet) {
+int MainWindow::process_packet(QByteArray packet) {
     QByteArray pkt;
-    pkt = packet.right(2);
-    char cmd = packet.at(2);
-    switch (cmd) {
-    case 51:
+    int val;
 
+    if ((unsigned char) packet.at(0) != 0xC0) {
+        return 1;
+    } else {
+        pkt.append(0xC0);
+    }
+
+    // Do byte destuffing
+    for (int var = 1; var < packet.size(); var++) {
+        if((unsigned char) packet.at(var) == 0xDB && (unsigned char) packet.at(var+1) == 0xDC) {
+            pkt.append(0xC0);
+        } else if((unsigned char) packet.at(var) == 0xDB && (unsigned char) packet.at(var+1) == 0xDD) {
+            pkt.append(0xDB);
+        } else {
+            pkt.append(packet.at(var));
+        }
+    }
+
+    // check address
+    if(pkt.at(1) < 127) {
+        return 2;
+    }
+
+    // Check command
+    if ((unsigned char) pkt.at(2) > 127) {
+        return 3;
+    }
+
+    QByteArray packet_data = pkt.mid(4);
+    // Check num of bytes
+    if ((unsigned char) pkt.at(3) != packet_data.size()){
+        //return 4;
+    }
+    //char checksum = 0;
+
+    switch ((unsigned char) pkt.at(2)) {
+    case 51:
+        val = ((static_cast<unsigned int>(pkt.at(0)) & 0xFF) << 8)
+                + (static_cast<unsigned int>(pkt.at(1)) & 0xFF);
+        ui->battery_main->setValue(val);
         break;
     default:
         break;
     }
-    int val = ((static_cast<unsigned int>(pkt.at(0)) & 0xFF) << 8)
-            + (static_cast<unsigned int>(pkt.at(1)) & 0xFF);
-    ui->battery_main->setValue(val);
+    return 0;
 }
 
 void MainWindow::on_battery_main_valueChanged(int value)
