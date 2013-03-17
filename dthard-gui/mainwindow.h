@@ -41,7 +41,8 @@ private:
     QString st_green;
     QString st_red;
     unsigned char num_of_bytes;
-    int process_packet(QByteArray packet);
+    int process_packet(char command, QByteArray packet);
+    int send_packet(char addr, unsigned char command, QByteArray data);
 
 protected:
     void keyPressEvent(QKeyEvent *);

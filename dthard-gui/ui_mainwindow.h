@@ -176,6 +176,7 @@ public:
         plainTextEdit = new QPlainTextEdit(centralWidget);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
         plainTextEdit->setGeometry(QRect(40, 150, 161, 101));
+        plainTextEdit->setReadOnly(true);
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);

@@ -12,12 +12,20 @@
 #include "task.h"
 #include <string.h>
 
-#define SOH 1 // Start of heading
-#define EOT 4 // End of transmission
-#define ACK 6 //
-#define NAK 21 // Negative ACK
+enum wake_packet { header = 0, address, command, num_bytes, data, crc};
+const unsigned char
+  FEND  = 0xC0,        // Frame END
+  FESC  = 0xDB,        // Frame ESCape
+  TFEND = 0xDC,        // Transposed Frame END
+  TFESC = 0xDD;        // Transposed Frame ESCape
+unsigned int usart_rx_buff[256], usart_rx_buff_temp;
+uint8_t wake_packet_status = header;
+uint8_t packet_started = 0;
+uint8_t wake_cmd = 0;
+uint8_t wake_data[256];
+uint8_t wake_header[4];
+uint8_t wake_data_iterator = 0;
 
-int usart_rx_buff[8];
 const unsigned char crc8Table[256] = {
     0x00, 0x31, 0x62, 0x53, 0xC4, 0xF5, 0xA6, 0x97,
     0xB9, 0x88, 0xDB, 0xEA, 0x7D, 0x4C, 0x1F, 0x2E,
@@ -52,16 +60,6 @@ const unsigned char crc8Table[256] = {
     0x82, 0xB3, 0xE0, 0xD1, 0x46, 0x77, 0x24, 0x15,
     0x3B, 0x0A, 0x59, 0x68, 0xFF, 0xCE, 0x9D, 0xAC
 };
-
-unsigned char crc8(unsigned char *pcBlock, unsigned char len)
-{
-    unsigned char crc = 0xFF;
-
-    while (len--)
-        crc = crc8Table[crc ^ *pcBlock++];
-
-    return crc;
-}
 
 void itoa(int n, char s[]) {
 	int i, j, k, sign;
@@ -138,7 +136,8 @@ void NVIC_Configuration(void) {
 	NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
 #endif
 	/* Enable DMA1 channel6 IRQ */
-	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel5_IRQn;
+	//NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel5_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
@@ -148,7 +147,7 @@ void NVIC_Configuration(void) {
 void SetupUSART() {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
-	DMA_InitTypeDef DMA_InitStructure;
+	//DMA_InitTypeDef DMA_InitStructure;
 	RCC_APB2PeriphClockCmd(
 			RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO,
 			ENABLE);
@@ -169,29 +168,31 @@ void SetupUSART() {
 			USART_HardwareFlowControl_None;
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_Init(USART1, &USART_InitStructure);
+	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	USART_Cmd(USART1, ENABLE);
-	USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
 
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
-	DMA_DeInit(DMA1_Channel5);
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&USART1->DR);
-	DMA_InitStructure.DMA_MemoryBaseAddr = usart_rx_buff;
-	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
-	DMA_InitStructure.DMA_BufferSize = sizeof(usart_rx_buff)/4;
-	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
-	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
-	DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
-	DMA_InitStructure.DMA_Priority = DMA_Priority_Low;
-	DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
-	DMA_Init(DMA1_Channel5, &DMA_InitStructure);
-
-	NVIC_EnableIRQ(DMA1_Channel5_IRQn);
-	DMA_ITConfig(DMA1_Channel5, DMA_IT_TC | DMA_IT_TE, ENABLE);
-	DMA_Cmd(DMA1_Channel5, ENABLE);
-
-	 RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
+//	USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
+//
+//	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+//	DMA_DeInit(DMA1_Channel5);
+//	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&USART1->DR);
+//	DMA_InitStructure.DMA_MemoryBaseAddr = usart_rx_buff;
+//	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
+//	DMA_InitStructure.DMA_BufferSize = 8;
+//	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+//	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+//	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+//	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
+//	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+//	DMA_InitStructure.DMA_Priority = DMA_Priority_Low;
+//	DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+//	DMA_Init(DMA1_Channel5, &DMA_InitStructure);
+//
+//	NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+//	DMA_ITConfig(DMA1_Channel5, DMA_IT_TC | DMA_IT_TE, ENABLE);
+//	DMA_Cmd(DMA1_Channel5, ENABLE);
+//
+//	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
 }
 
 void SetupADC() {
@@ -267,47 +268,28 @@ void usartSendStr(char *str) {
 		usartSendChr(str[i++]);
 	}
 }
-char dst[256];
-unsigned int usartSendPacket(int cmd, char *data) {
-	//uint32_t crc = CRC_CalcBlockCRC(data,11);
-	short j = 0;
-	//for (j = 2; j < 11; j++) {
-	//	packet[j] = data[j-2];
-	//}
-	usartSendChr(SOH);
-	usartSendChr(sizeof(data)/sizeof(*dst));
-	for (j = 0; j < sizeof(data); j++) {
-		usartSendChr(data[j]);
-	}
-	usartSendStr("\n");
-	//usartSendChr(EOT);
-	return 0;
-
-}
 
 void usartSendByte(int cmd, uint16_t word) {
+	uint8_t crc = 0xFF;
 	uint8_t b1 = word & 0xFF;
 	uint8_t b2 = word >> 8;
-	usartSendChr(0xC0); // FEND
+	crc = crc8Table[crc ^ b2];
+	crc = crc8Table[crc ^ b1];
+	usartSendChr(FEND); // FEND
 	usartSendChr(200); // ADDRESS
-	usartSendChr(51); // CMD
+	usartSendChr(cmd); // CMD
 	usartSendChr(2); // N
 	usartSendChr(b2);
 	usartSendChr(b1);
-	usartSendChr(crc8(word,2)); // CRC
+	usartSendChr(crc); // CRC
 }
 
 void vPrintTime(void *pvParameters) {
 	uint16_t adc;
-
 	for (;;) {
-		GPIO_SetBits(GPIOC, GPIO_Pin_8);
-		vTaskDelay(500);
-		GPIO_ResetBits(GPIOC, GPIO_Pin_8);
-		vTaskDelay(500);
 		adc = ADC_GetConversionValue(ADC1);
-		//itoa(adv, dst);
-		usartSendByte(50, adc);
+		usartSendByte(51, adc);
+		vTaskDelay(500);
 	}
 }
 
@@ -335,11 +317,93 @@ int main(void) {
 
 void DMA1_Channel5_IRQHandler(void) {
 	if (DMA1->ISR & DMA_ISR_TCIF5) {
-		DMA_ClearITPendingBit(DMA1_IT_TC5);
-	}
+		if(usart_rx_buff[0] == FEND) {
+			wake_packet_status = header;
+		} else if(wake_packet_status == header) {
+			if (usart_rx_buff[0] == TFEND && usart_rx_buff_temp == FESC) {
+				usart_rx_buff[0] = FEND;
+			} else if (usart_rx_buff[0] == TFESC && usart_rx_buff_temp == FESC) {
+				usart_rx_buff[0] = FESC;
+			}
+			usart_rx_buff_temp = usart_rx_buff[0];
+			switch (wake_packet_status) {
+				case address:
+					wake_header[address] = usart_rx_buff[0];
+					wake_packet_status = command;
+					break;
+				case command:
+					wake_header[command] = usart_rx_buff[0];
+					wake_packet_status = num_bytes;
+					break;
+				case num_bytes:
+					wake_header[num_bytes] = usart_rx_buff[0];
+					wake_packet_status = data;
+					break;
+				case data:
+					wake_data[wake_data_iterator] = usart_rx_buff[0];
+					wake_data_iterator++;
+					if (wake_data_iterator == wake_header[num_bytes]) {
+						wake_data_iterator = 0;
+						wake_packet_status = 255;
+						usart_rx_buff_temp = 0xFF;
+						memset(&wake_data[0], 0, sizeof(wake_data));
+					}
+					break;
 
-	if (DMA1->ISR & DMA_ISR_TEIF5) {
+				default:
+					break;
+			}
+		}
+		DMA_ClearITPendingBit(DMA1_IT_TC5);
+
+	} else if (DMA1->ISR & DMA_ISR_TEIF5) {
 		DMA_ClearITPendingBit(DMA1_IT_TE5);
 	}
 }
 
+unsigned int i;
+void USART1_IRQHandler(void)
+{
+    if ((USART1->SR & USART_FLAG_RXNE) != (u16)RESET)
+	{
+    	usart_rx_buff[0] = USART_ReceiveData(USART1);
+    	if(usart_rx_buff[0] == FEND) {
+    				packet_started = 1;
+    			} else if(packet_started == 1) {
+    				if (usart_rx_buff[0] == TFEND && usart_rx_buff_temp == FESC) {
+    					usart_rx_buff[0] = FEND;
+    				} else if (usart_rx_buff[0] == TFESC && usart_rx_buff_temp == FESC) {
+    					usart_rx_buff[0] = FESC;
+    				}
+    				usart_rx_buff_temp = usart_rx_buff[0];
+    				switch (wake_packet_status) {
+    					case header:
+    						wake_header[address] = usart_rx_buff[0];
+    						wake_packet_status = command;
+    						break;
+    					case command:
+    						wake_header[command] = usart_rx_buff[0];
+    						wake_packet_status = num_bytes;
+    						break;
+    					case num_bytes:
+    						wake_header[num_bytes] = usart_rx_buff[0];
+    						wake_packet_status = data;
+    						break;
+    					case data:
+    						wake_data[wake_data_iterator] = usart_rx_buff[0];
+    						wake_data_iterator++;
+    						if (wake_data_iterator == wake_header[num_bytes]) {
+    							wake_data_iterator = 0;
+    							wake_packet_status = 255;
+    							usart_rx_buff_temp = 0xFF;
+    							memset(&wake_data[0], 0, sizeof(wake_data));
+    						}
+    						break;
+
+    					default:
+    						break;
+    				}
+    			}
+    	}
+    //USART_ClearITPendingBit(USART_)
+}
