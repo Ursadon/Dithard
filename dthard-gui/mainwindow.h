@@ -6,6 +6,12 @@
 #include <QtGui>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+const unsigned char
+  FEND  = 0xC0,        // Frame END
+  FESC  = 0xDB,        // Frame ESCape
+  TFEND = 0xDC,        // Transposed Frame END
+  TFESC = 0xDD;        // Transposed Frame ESCape
+enum packet_offset { fend = 0, addr, cmd, n, datastream, crc };
 
 namespace Ui {
 class MainWindow;
@@ -25,7 +31,8 @@ private:
     QPixmap btn_DOWN;
     int x_coord;
     int y_coord;
-    bool parital_packet;
+    bool data_started;
+    bool packet_started;
     bool port_opened;
     QList<QSerialPortInfo> serialPortInfoList;
     QByteArray bytes;
@@ -33,6 +40,7 @@ private:
     QString st_yellow;
     QString st_green;
     QString st_red;
+    unsigned char num_of_bytes;
     int process_packet(QByteArray packet);
 
 protected:

@@ -13,7 +13,6 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags( (windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
     x_coord = 0;
     y_coord = 0;
-    parital_packet = FALSE;
     port_opened = FALSE;
     btn_UP.load(":/graphics/img/circle_blue.png");
     btn_DOWN.load(":/graphics/img/circle_green.png");
@@ -141,106 +140,54 @@ void MainWindow::on_pbComPortOpen_clicked()
 
 }
 
-void MainWindow::readRequest()
-{    QByteArray temp_data = serial.readAll(); // Заполняем массив данными
-     int fend_offset = temp_data.indexOf(0xC0);
-      int fend_count = temp_data.count(0xC0);
-       char fend_header_start, fend_header_end, fend_header_size;
-        char x,y = 0;
-         QByteArray fend_offset_array;
-
-          if(fend_count > 1) {
-              qDebug() << "multi-packet RX total:" << QString::number(fend_count) << endl;
-              fend_offset_array.append(temp_data.indexOf(0xC0));
-              for (int var = 0; var < fend_count; var++) {
-                  y = fend_offset_array.at(var)+1;
-                  x = temp_data.indexOf(0xC0,y);
-                  fend_offset_array.append(x);
-              }
-              // Теперь у нас есть массив с позициями заголовков
-              for (int var = 0; var < fend_count; var++) {
-                  fend_header_start = fend_offset_array.at(var);
-                  fend_header_end = fend_offset_array.at(var+1);
-                  fend_header_size = fend_header_end - fend_header_start;
-                  qDebug() << "FEND boundaries at: " << QString::number(fend_header_start) << " + " << QString::number(fend_header_end) << endl;
-                  // Заголовок не в начале - значит в начале данные от старого пакета?
-                  if (fend_header_start > 0 && parital_packet) {
-                      bytes += temp_data.left(fend_header_start);
-                  }
-                  // Мы получили заголовок?
-                  if (fend_header_size >= 4) {
-                      // Извлекаем его
-                      bytes += temp_data.mid(fend_header_start,fend_header_size);
-                      if(temp_data.at(fend_header_start+3) <= bytes.size()) {
-                          qDebug() << "RCVD PACKET! " << bytes.size()<< endl;
-                          process_packet(bytes);
-                          bytes.clear();
-                          parital_packet = FALSE;
-                      }
-                  } else {
-                      parital_packet = TRUE;
-                  }
-              }
-              fend_offset_array.clear();
-          } else {
-              if (fend_offset != -1) {
-                  // Скинули всё, что идёт после FEND в пакет
-                  bytes.append(temp_data.mid(fend_offset));
-                  // Если полностью получили заголовок - то парсим его
-                  parital_packet = TRUE;
-              } else if(parital_packet == TRUE) {
-                  bytes += temp_data;
-              }
-              if (bytes.size() >= 4) {
-                  if(bytes.at(3) <= bytes.size()) {
-                      qDebug() << "RCVD PACKET! " << bytes.size() << endl;
-                      process_packet(bytes);
-                      bytes.clear();
-                      parital_packet = FALSE;
-                  }
-              }
-          }
+void MainWindow::readRequest() {
+    QByteArray rx_buffer = serial.readAll();
+    foreach (unsigned char rx_byte, rx_buffer) {
+        if (packet_started) {
+            // Bytes destuffing
+            if(rx_byte == TFEND && bytes.endsWith(FESC)){
+                bytes.chop(1);
+                bytes.append(FEND);
+            } else if (rx_byte == TFESC && bytes.endsWith(FESC)) {
+                bytes.chop(1);
+                bytes.append(FESC);
+            } else {
+                bytes.append(rx_byte);
+            }
+            // We received full header?
+            if (bytes.size() == 4) {
+                // TODO: implement ADDR & CMD check
+                num_of_bytes = bytes.at(n);
+                data_started = TRUE;
+            }
+            if(data_started && bytes.size() == 1 + 1 + 1 + 1 + num_of_bytes + 1) { // FEND + ADDR + CMD + N + DATA + CRC
+                // TODO: implement CRC16
+                qDebug() << "[RX] FEND" << endl
+                         << "[RX] ADDR: " << bytes.at(addr) << endl
+                         << "[RX] CMD: " << bytes.at(cmd) << endl
+                         << "[RX] N: " << QString::number(bytes.at(n)) << endl
+                         << "[RX] DATA: " << bytes.mid(datastream).toHex() << endl
+                         << "----------------------------" << endl;
+                process_packet(bytes);
+                data_started = FALSE;
+                packet_started = FALSE;
+                bytes.clear();
+            }
+        } else if (rx_byte == FEND) {
+            bytes.append(rx_byte);
+            packet_started = TRUE;
+        }
+    }
 }
 
 int MainWindow::process_packet(QByteArray packet) {
-    QByteArray pkt;
+    unsigned char command = packet.at(cmd);
+    QByteArray pkt = packet.mid(datastream);
+
+    pkt.chop(1);
     int val;
 
-    if ((unsigned char) packet.at(0) != 0xC0) {
-        return 1;
-    } else {
-        pkt.append(0xC0);
-    }
-
-    // Do byte destuffing
-    for (int var = 1; var < packet.size(); var++) {
-        if((unsigned char) packet.at(var) == 0xDB && (unsigned char) packet.at(var+1) == 0xDC) {
-            pkt.append(0xC0);
-        } else if((unsigned char) packet.at(var) == 0xDB && (unsigned char) packet.at(var+1) == 0xDD) {
-            pkt.append(0xDB);
-        } else {
-            pkt.append(packet.at(var));
-        }
-    }
-
-    // check address
-    if(pkt.at(1) < 127) {
-        return 2;
-    }
-
-    // Check command
-    if ((unsigned char) pkt.at(2) > 127) {
-        return 3;
-    }
-
-    QByteArray packet_data = pkt.mid(4);
-    // Check num of bytes
-    if ((unsigned char) pkt.at(3) != packet_data.size()){
-        //return 4;
-    }
-    //char checksum = 0;
-
-    switch ((unsigned char) pkt.at(2)) {
+    switch (command) {
     case 51:
         val = ((static_cast<unsigned int>(pkt.at(0)) & 0xFF) << 8)
                 + (static_cast<unsigned int>(pkt.at(1)) & 0xFF);
