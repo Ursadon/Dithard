@@ -18,8 +18,8 @@
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
@@ -44,7 +44,8 @@ public:
     QComboBox *comPortList;
     QPushButton *pbComPortOpen;
     QPushButton *pushButton;
-    QPlainTextEdit *plainTextEdit;
+    QLabel *lbSignal_Strenght_2;
+    QLineEdit *leCRC_err;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -147,7 +148,7 @@ public:
         signal_strenght = new QProgressBar(centralWidget);
         signal_strenght->setObjectName(QStringLiteral("signal_strenght"));
         signal_strenght->setEnabled(false);
-        signal_strenght->setGeometry(QRect(260, 80, 118, 20));
+        signal_strenght->setGeometry(QRect(260, 80, 121, 20));
         signal_strenght->setStyleSheet(QLatin1String("QProgressBar::chunk {\n"
 "background-color: #00FF00;\n"
 "}\n"
@@ -157,7 +158,7 @@ public:
 "text-align: center;\n"
 "background: #eeeeee;\n"
 "}"));
-        signal_strenght->setMaximum(3700);
+        signal_strenght->setMaximum(5);
         signal_strenght->setValue(0);
         comPortList = new QComboBox(centralWidget);
         comPortList->setObjectName(QStringLiteral("comPortList"));
@@ -172,11 +173,18 @@ public:
         pbComPortOpen->setFlat(false);
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(60, 90, 75, 23));
-        plainTextEdit = new QPlainTextEdit(centralWidget);
-        plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(40, 150, 161, 101));
-        plainTextEdit->setReadOnly(true);
+        pushButton->setGeometry(QRect(20, 130, 186, 51));
+        pushButton->setFocusPolicy(Qt::NoFocus);
+        pushButton->setStyleSheet(QStringLiteral(""));
+        pushButton->setFlat(false);
+        lbSignal_Strenght_2 = new QLabel(centralWidget);
+        lbSignal_Strenght_2->setObjectName(QStringLiteral("lbSignal_Strenght_2"));
+        lbSignal_Strenght_2->setEnabled(false);
+        lbSignal_Strenght_2->setGeometry(QRect(140, 10, 71, 20));
+        leCRC_err = new QLineEdit(centralWidget);
+        leCRC_err->setObjectName(QStringLiteral("leCRC_err"));
+        leCRC_err->setEnabled(false);
+        leCRC_err->setGeometry(QRect(140, 30, 113, 20));
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
@@ -198,6 +206,7 @@ public:
         comPortList->setCurrentText(QString());
         pbComPortOpen->setText(QApplication::translate("MainWindow", "Open", 0));
         pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0));
+        lbSignal_Strenght_2->setText(QApplication::translate("MainWindow", "\320\236\321\210\320\270\320\261\320\272\320\270 CRC", 0));
     } // retranslateUi
 
 };

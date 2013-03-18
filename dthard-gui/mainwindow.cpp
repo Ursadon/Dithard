@@ -2,8 +2,10 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QKeyEvent>
+#include <QTimer>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+
 const unsigned char crc8Table[256] = {
     0x00, 0x31, 0x62, 0x53, 0xC4, 0xF5, 0xA6, 0x97,
     0xB9, 0x88, 0xDB, 0xEA, 0x7D, 0x4C, 0x1F, 0x2E,
@@ -47,11 +49,13 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags( (windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
     x_coord = 0;
     y_coord = 0;
+    rx_ping_error_count = 0;
     port_opened = FALSE;
     btn_UP.load(":/graphics/img/circle_blue.png");
     btn_DOWN.load(":/graphics/img/circle_green.png");
+    rx_timer.setInterval(1000);
+    QObject::connect(&rx_timer, SIGNAL(timeout()), this, SLOT(rx_timer_timeout()));
     connect(&serial, SIGNAL(readyRead()), this, SLOT(readRequest()));
-
     QList<QSerialPortInfo> serialPortInfoList = QSerialPortInfo::availablePorts();
     foreach (const QSerialPortInfo &serialPortInfo, serialPortInfoList) {
         if(serialPortInfo.isBusy()) {
@@ -157,19 +161,26 @@ void MainWindow::on_pbComPortOpen_clicked()
             return;
         }
         qDebug() << "PORT OPENED" << endl;
+        rx_timer.start(2000);
+
         ui->pbComPortOpen->setText("Close");
         ui->battery_main->setEnabled(TRUE);
         ui->lbBattery_main->setEnabled(TRUE);
+        ui->signal_strenght->setEnabled(TRUE);
+        ui->lbSignal_Strenght->setEnabled(TRUE);
     } else {
         ui->comPortList->setEnabled(true);
         port_opened = FALSE;
         serial.close();
+        rx_timer.stop();
         qDebug() << "PORT CLOSED" << endl;
         ui->pbComPortOpen->setText("Open");
         ui->battery_main->setValue(0);
         ui->signal_strenght->setValue(0);
         ui->battery_main->setEnabled(FALSE);
         ui->lbBattery_main->setEnabled(FALSE);
+        ui->signal_strenght->setEnabled(FALSE);
+        ui->lbSignal_Strenght->setEnabled(FALSE);
     }
 
 }
@@ -206,15 +217,15 @@ void MainWindow::readRequest() {
                 rx_crc_actual = bytes.right(1).at(0);
                 if (rx_crc_actual != rx_crc_calculated) {
                     qDebug() << "[RX] CRC error" << QString::number(rx_crc_actual) << " (" << QString::number(rx_crc_calculated) << ")" << endl;
-                    ui->plainTextEdit->appendPlainText("[RX] CRC error");
+                    rx_crc_error_count++;
                 } else {
-                    qDebug() << "[RX] FEND" << endl
-                             << "[RX] ADDR: " << QString::number(static_cast<unsigned char>(bytes.at(addr))) << endl
-                             << "[RX] CMD: " << QString::number(static_cast<unsigned char>(bytes.at(cmd))) << endl
-                             << "[RX] N: " << QString::number(static_cast<unsigned char>(bytes.at(n))) << endl
-                             << "[RX] DATA: " << bytes.mid(datastream,bytes.size()-5).toHex() << endl
-                             << "[RX] CRC: " << QString::number(rx_crc_actual) << " (" << QString::number(rx_crc_calculated) << ")" << endl
-                             << "----------------------------" << endl;
+//                    qDebug() << "[RX] FEND" << endl
+//                             << "[RX] ADDR: " << QString::number(static_cast<unsigned char>(bytes.at(addr))) << endl
+//                             << "[RX] CMD: " << QString::number(static_cast<unsigned char>(bytes.at(cmd))) << endl
+//                             << "[RX] N: " << QString::number(static_cast<unsigned char>(bytes.at(n))) << endl
+//                             << "[RX] DATA: " << rx_data.toHex() << endl
+//                             << "[RX] CRC: " << QString::number(rx_crc_actual) << " (" << QString::number(rx_crc_calculated) << ")" << endl
+//                             << "----------------------------" << endl;
                     process_packet(bytes.at(cmd), rx_data);
                 }
                 data_started = FALSE;
@@ -236,6 +247,10 @@ int MainWindow::process_packet(char command, QByteArray packet) {
                 + (static_cast<unsigned int>(packet.at(1)) & 0xFF);
         ui->battery_main->setValue(val);
         break;
+    case 1:
+        // PING
+        rx_ping_error_count++;
+        break;
     default:
         break;
     }
@@ -254,7 +269,7 @@ int MainWindow::send_packet(char addr, unsigned char command, QByteArray data) {
     packet.append(command);
     packet.append(data.size()); // N
     packet.append(data);
-
+    //packet.append(tx_crc); // CRC
     serial.write(packet);
     packet.clear();
     return 0;
@@ -263,7 +278,7 @@ int MainWindow::send_packet(char addr, unsigned char command, QByteArray data) {
 void MainWindow::on_battery_main_valueChanged(int value)
 {
     int value_maximum = ui->battery_main->maximum();
-    int value_percent = value * 100 / value_maximum * 10000;
+    int value_percent = value * 100 / value_maximum;
     QString st_red = QString (
                 "QProgressBar::chunk {"
                 "background-color: #FF0000;"
@@ -308,4 +323,10 @@ void MainWindow::on_battery_main_valueChanged(int value)
 
 void MainWindow::on_pushButton_clicked() {
     send_packet(5,7,"Peersxxx");
+}
+void MainWindow::rx_timer_timeout() {
+    ui->signal_strenght->setValue(rx_ping_error_count);
+    ui->leCRC_err->setText(QString::number(rx_crc_error_count));
+    rx_ping_error_count = 0;
+    rx_crc_error_count = 0;
 }
