@@ -46,6 +46,7 @@ public:
     QPushButton *pushButton;
     QLabel *lbSignal_Strenght_2;
     QLineEdit *leCRC_err;
+    QLabel *label;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -185,6 +186,9 @@ public:
         leCRC_err->setObjectName(QStringLiteral("leCRC_err"));
         leCRC_err->setEnabled(false);
         leCRC_err->setGeometry(QRect(140, 30, 113, 20));
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(40, 80, 46, 13));
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
@@ -207,6 +211,7 @@ public:
         pbComPortOpen->setText(QApplication::translate("MainWindow", "Open", 0));
         pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0));
         lbSignal_Strenght_2->setText(QApplication::translate("MainWindow", "\320\236\321\210\320\270\320\261\320\272\320\270 CRC", 0));
+        label->setText(QApplication::translate("MainWindow", "TextLabel", 0));
     } // retranslateUi
 
 };

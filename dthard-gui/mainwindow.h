@@ -31,7 +31,7 @@ private:
     QPixmap btn_UP;
     QPixmap btn_DOWN;
     int x_coord, y_coord;
-    unsigned int rx_ping_error_count, rx_crc_error_count;
+    unsigned int rx_ping_error_count, rx_crc_error_count, rx_thr_count;
     bool data_started;
     bool packet_started;
     bool port_opened;

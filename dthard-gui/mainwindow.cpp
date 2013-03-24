@@ -49,7 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags( (windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
     x_coord = 0;
     y_coord = 0;
+    rx_thr_count = 0;
     rx_ping_error_count = 0;
+	rx_crc_error_count = 0;
     port_opened = FALSE;
     btn_UP.load(":/graphics/img/circle_blue.png");
     btn_DOWN.load(":/graphics/img/circle_green.png");
@@ -93,12 +95,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
+    QByteArray command;
     if(event->key() == Qt::Key_Up)
     {
         ui->lb_UP->setPixmap(btn_DOWN);
         if(x_coord < 100 ){
             x_coord++;
         }
+        command.append(1);
+        send_packet(5,120,command);
     }
     if(event->key() == Qt::Key_Down)
     {
@@ -106,18 +111,24 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         if(x_coord > 0){
             x_coord--;
         }
+        command.append(2);
+        send_packet(5,120,command);
     }
     if(event->key() == Qt::Key_Left)
     {
         ui->lb_LEFT->setPixmap(btn_DOWN);
         y_coord++;
+        command.append(3);
+        send_packet(5,120,command);
     }
     if(event->key() == Qt::Key_Right)
     {
         ui->lb_RIGHT->setPixmap(btn_DOWN);
         y_coord--;
+        command.append(4);
+        send_packet(5,120,command);
     }
-    ui->battery_main->setValue(x_coord);
+    //ui->battery_main->setValue(x_coord);
 }
 
 void MainWindow::on_pbComPortOpen_clicked()
@@ -216,7 +227,7 @@ void MainWindow::readRequest() {
                 }
                 rx_crc_actual = bytes.right(1).at(0);
                 if (rx_crc_actual != rx_crc_calculated) {
-                    qDebug() << "[RX] CRC error" << QString::number(rx_crc_actual) << " (" << QString::number(rx_crc_calculated) << ")" << endl;
+                    //qDebug() << "[RX] CRC error" << QString::number(rx_crc_actual) << " (" << QString::number(rx_crc_calculated) << ")" << endl;
                     rx_crc_error_count++;
                 } else {
 //                    qDebug() << "[RX] FEND" << endl
@@ -251,7 +262,16 @@ int MainWindow::process_packet(char command, QByteArray packet) {
         // PING
         rx_ping_error_count++;
         break;
+    case 2:
+        // Motor feedback
+        ui->label->setText(packet);
+        break;
+    case 5:
+        // Motor feedback
+        rx_thr_count++;
+        break;
     default:
+        ui->label->setText("N/A");
         break;
     }
     return 0;
@@ -325,8 +345,13 @@ void MainWindow::on_pushButton_clicked() {
     send_packet(5,7,"Peersxxx");
 }
 void MainWindow::rx_timer_timeout() {
+    QByteArray tx_data;
+    tx_data.append(1);
+    send_packet(201,51,tx_data);
     ui->signal_strenght->setValue(rx_ping_error_count);
+    qDebug() << "RX THR = " << QString::number((rx_thr_count*6*8)/2);
     ui->leCRC_err->setText(QString::number(rx_crc_error_count));
+    rx_thr_count = 0;
     rx_ping_error_count = 0;
     rx_crc_error_count = 0;
 }

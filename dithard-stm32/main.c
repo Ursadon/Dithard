@@ -27,6 +27,7 @@ uint8_t wake_data[256];
 uint8_t wake_header[4];
 uint8_t wake_data_iterator = 0;
 
+uint16_t adc;
 const unsigned char crc8Table[256] = { 0x00, 0x31, 0x62, 0x53, 0xC4, 0xF5, 0xA6,
 		0x97, 0xB9, 0x88, 0xDB, 0xEA, 0x7D, 0x4C, 0x1F, 0x2E, 0x43, 0x72, 0x21,
 		0x10, 0x87, 0xB6, 0xE5, 0xD4, 0xFA, 0xCB, 0x98, 0xA9, 0x3E, 0x0F, 0x5C,
@@ -244,28 +245,32 @@ void SetupRangeMeter() {
 }
 
 void usartSendChr(uint16_t data) {
+	int j = 0;
 	while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
 		;
 	USART_SendData(USART1, data);
 	while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET)
 		;
+	for (j = 0; j < 24000; ++j) {
+		asm("nop");
+	}
 }
 
-void usartSendStr(char *str) {
+void usartSendStr(unsigned char *str) {
 	int i = 0;
 	while (str[i] != 0) {
 		usartSendChr(str[i++]);
 	}
 }
 
-void usartSendWord(int cmd, uint16_t word) {
+void usartSendWord(uint8_t address, uint8_t cmd, uint16_t word) {
 	uint8_t crc = 0xFF;
 	uint8_t b1 = word & 0xFF;
 	uint8_t b2 = word >> 8;
 	crc = crc8Table[crc ^ b2];
 	crc = crc8Table[crc ^ b1];
 	usartSendChr(FEND); // FEND
-	usartSendChr(200); // ADDRESS
+	usartSendChr(address); // ADDRESS
 	usartSendChr(cmd); // CMD
 	usartSendChr(2); // N
 	usartSendChr(b2);
@@ -273,31 +278,59 @@ void usartSendWord(int cmd, uint16_t word) {
 	usartSendChr(crc); // CRC
 }
 
-void usartSendByte(int cmd, uint8_t word) {
+void usartSendByte(uint8_t address, uint8_t cmd, uint8_t byte) {
 	uint8_t crc = 0xFF;
-	crc = crc8Table[crc ^ word];
+	crc = crc8Table[crc ^ byte];
 	usartSendChr(FEND); // FEND
-	usartSendChr(200); // ADDRESS
+	usartSendChr(address); // ADDRESS
 	usartSendChr(cmd); // CMD
 	usartSendChr(1); // N
-	usartSendChr(word);
+	usartSendChr(byte);
 	usartSendChr(crc); // CRC
 }
 
-void vPrintTime(void *pvParameters) {
-	uint16_t adc;
+void packet_parser(uint8_t address, uint8_t cmd, uint8_t *packet) {
+	switch (cmd) {
+	case 51:
+		usartSendWord(200, 51, adc);
+		break;
+	case 120:
+		switch (packet[0]) {
+		case 1:
+			// Up
+			usartSendByte(200, 2, 51);
+			break;
+		case 2:
+			// Down
+			usartSendByte(200, 2, 52);
+			break;
+		case 3:
+			// Left
+			usartSendByte(200, 2, 53);
+			break;
+		case 4:
+			// Right
+			usartSendByte(200, 2, 54);
+		default:
+			break;
+		}
+		break;
+	default:
+		break;
+	}
+}
+void vVoltageMain(void *pvParameters) {
+
 	for (;;) {
 		adc = ADC_GetConversionValue(ADC1);
-		usartSendWord(51, adc);
-		vTaskDelay(1000);
+		vTaskDelay(100);
 	}
 }
 
 void vPing(void *pvParameters) {
 	for (;;) {
-		vTaskDelay(97);
-		usartSendByte(1, 0xAC);
-		vTaskDelay(300);
+		vTaskDelay(333);
+		usartSendByte(200, 1, 0xAC);
 	}
 }
 
@@ -306,6 +339,14 @@ void vScanUsart(void *pvParameters) {
 		if ((USART1->SR & USART_FLAG_RXNE) != (u16) RESET) {
 			usart_rx_buff = USART_ReceiveData(USART1);
 			if (usart_rx_buff == FEND) {
+				if (packet_started == 1) {
+					// Получили FEND, но пакет ещё не окончен - сбрасываем данные
+					wake_data_iterator = 0;
+					wake_packet_status = header;
+					usart_rx_buff_temp = 0xFF;
+					memset(&wake_data[0], 0, sizeof(wake_data));
+					memset(&wake_header[0], 0, sizeof(wake_header));
+				}
 				packet_started = 1; // Получили FEND = пакет начался
 			} else if (packet_started == 1) {
 				// destuffing
@@ -317,7 +358,7 @@ void vScanUsart(void *pvParameters) {
 				}
 
 				usart_rx_buff_temp = usart_rx_buff;
-
+				// Заполняем массив с заголовком
 				switch (wake_packet_status) {
 				case header:
 					wake_header[address] = usart_rx_buff;
@@ -337,9 +378,12 @@ void vScanUsart(void *pvParameters) {
 					wake_data_iterator++;
 					if (wake_data_iterator == wake_header[num_bytes]) {
 						// Изъять пакет, очистить переменныe
+						packet_parser(wake_header[address], wake_cmd,
+								wake_data);
 						wake_data_iterator = 0;
-						wake_packet_status = 255;
+						wake_packet_status = header;
 						packet_started = 0;
+						wake_cmd = 0;
 						usart_rx_buff_temp = 0xFF;
 						memset(&wake_data[0], 0, sizeof(wake_data));
 						memset(&wake_header[0], 0, sizeof(wake_header));
@@ -354,6 +398,12 @@ void vScanUsart(void *pvParameters) {
 	}
 }
 
+void vThroughput(void *pvParameters) {
+	for (;;) {
+		usartSendByte(121, 5, 12);
+		taskYIELD();
+	}
+}
 int main(void) {
 	SetSysClockTo24();
 	NVIC_Configuration();
@@ -361,12 +411,14 @@ int main(void) {
 	SetupLED();
 	SetupADC();
 
-	xTaskCreate( vPrintTime, ( signed char * ) "vPrintTime",
+	xTaskCreate( vVoltageMain, ( signed char * ) "vVoltageMain",
 			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	xTaskCreate( vPing, ( signed char * ) "vPing",
-			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+	xTaskCreate( vPing, ( signed char * ) "vPing", configMINIMAL_STACK_SIZE,
+			NULL, 0, ( xTaskHandle * ) NULL);
 	xTaskCreate( vScanUsart, ( signed char * ) "vScanUsart",
 			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+	//xTaskCreate( vThroughput, ( signed char * ) "vThroughput",
+	//		configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
 	vTaskStartScheduler();
 	return 0;
 }
