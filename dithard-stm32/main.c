@@ -289,34 +289,47 @@ void usartSendByte(uint8_t address, uint8_t cmd, uint8_t byte) {
 	usartSendChr(crc); // CRC
 }
 
-void packet_parser(uint8_t address, uint8_t cmd, uint8_t *packet) {
-	switch (cmd) {
-	case 51:
+void packet_parser(uint8_t address, uint8_t cmd, uint8_t *packet,
+		uint8_t packet_crc) {
+	// CRC check
+	uint8_t crc = 0xFF;
+	crc = crc8Table[crc ^ packet[0]];
+	if (crc != packet_crc) {
+		return;
+	}
+	// Parse
+	if (cmd == 34) {
+		usartSendByte(200, 34, 0xAC);
+		usartSendByte(200,60,0xAF);
+	}
+	if (cmd == 51) {
 		usartSendWord(200, 51, adc);
-		break;
-	case 120:
+		usartSendByte(200,60,0xAF);
+	}
+	if (cmd == 120) {
 		switch (packet[0]) {
 		case 1:
 			// Up
 			usartSendByte(200, 2, 51);
+			usartSendByte(200,60,0xAF);
 			break;
 		case 2:
 			// Down
 			usartSendByte(200, 2, 52);
+			usartSendByte(200,60,0xAF);
 			break;
 		case 3:
 			// Left
 			usartSendByte(200, 2, 53);
+			usartSendByte(200,60,0xAF);
 			break;
 		case 4:
 			// Right
 			usartSendByte(200, 2, 54);
+			usartSendByte(200,60,0xAF);
 		default:
 			break;
 		}
-		break;
-	default:
-		break;
 	}
 }
 void vVoltageMain(void *pvParameters) {
@@ -329,7 +342,7 @@ void vVoltageMain(void *pvParameters) {
 
 void vPing(void *pvParameters) {
 	for (;;) {
-		vTaskDelay(333);
+		vTaskDelay(100);
 		usartSendByte(200, 1, 0xAC);
 	}
 }
@@ -374,12 +387,15 @@ void vScanUsart(void *pvParameters) {
 					wake_packet_status = data;
 					break;
 				case data:
-					wake_data[wake_data_iterator] = usart_rx_buff;
-					wake_data_iterator++;
-					if (wake_data_iterator == wake_header[num_bytes]) {
+
+					if (wake_data_iterator < wake_header[num_bytes]) {
+						wake_data[wake_data_iterator] = usart_rx_buff;
+						wake_data_iterator++;
+					} else if (wake_data_iterator >= wake_header[num_bytes]) {
+						wake_header[crc] = usart_rx_buff;
 						// »зъ€ть пакет, очистить переменныe
-						packet_parser(wake_header[address], wake_cmd,
-								wake_data);
+						packet_parser(wake_header[address], wake_cmd, wake_data,
+								wake_header[crc]);
 						wake_data_iterator = 0;
 						wake_packet_status = header;
 						packet_started = 0;
@@ -413,8 +429,8 @@ int main(void) {
 
 	xTaskCreate( vVoltageMain, ( signed char * ) "vVoltageMain",
 			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	xTaskCreate( vPing, ( signed char * ) "vPing", configMINIMAL_STACK_SIZE,
-			NULL, 0, ( xTaskHandle * ) NULL);
+	//xTaskCreate( vPing, ( signed char * ) "vPing", configMINIMAL_STACK_SIZE,
+	//		NULL, 0, ( xTaskHandle * ) NULL);
 	xTaskCreate( vScanUsart, ( signed char * ) "vScanUsart",
 			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
 	//xTaskCreate( vThroughput, ( signed char * ) "vThroughput",

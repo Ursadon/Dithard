@@ -28,20 +28,17 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QPixmap btn_UP;
-    QPixmap btn_DOWN;
+	QPixmap btn_UP, btn_DOWN;
     int x_coord, y_coord;
-    unsigned int rx_ping_error_count, rx_crc_error_count, rx_thr_count;
-    bool data_started;
-    bool packet_started;
+	unsigned int rx_ping_error_count, rx_crc_error_count;
+	bool data_started, packet_started, ack;
     bool port_opened;
     QList<QSerialPortInfo> serialPortInfoList;
+	QQueue<QByteArray> tx_queue;
     QByteArray bytes;
     QSerialPort serial;
-    QTimer rx_timer;
-    QString st_yellow;
-    QString st_green;
-    QString st_red;
+	QTimer rx_timer, tx_timer;
+	QString st_yellow, st_green, st_red;
     unsigned char num_of_bytes;
     int process_packet(char command, QByteArray packet);
     int send_packet(char addr, unsigned char command, QByteArray data);
@@ -56,6 +53,7 @@ private slots:
     void on_battery_main_valueChanged(int value);
     void on_pushButton_clicked();
     void rx_timer_timeout();
+	void send_queue();
 };
 
 #endif // MAINWINDOW_H
