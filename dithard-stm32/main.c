@@ -298,35 +298,26 @@ void packet_parser(uint8_t address, uint8_t cmd, uint8_t *packet,
 		return;
 	}
 	// Parse
-	if (cmd == 34) {
-		usartSendByte(200, 34, 0xAC);
-		usartSendByte(200,60,0xAF);
+	if (cmd == 10) {
+		usartSendWord(200, 10, adc);
 	}
-	if (cmd == 51) {
-		usartSendWord(200, 51, adc);
-		usartSendByte(200,60,0xAF);
-	}
-	if (cmd == 120) {
+	if (cmd == 11) {
 		switch (packet[0]) {
 		case 1:
 			// Up
-			usartSendByte(200, 2, 51);
-			usartSendByte(200,60,0xAF);
+			usartSendByte(200, 11, 1);
 			break;
 		case 2:
 			// Down
-			usartSendByte(200, 2, 52);
-			usartSendByte(200,60,0xAF);
+			usartSendByte(200, 11, 2);
 			break;
 		case 3:
 			// Left
-			usartSendByte(200, 2, 53);
-			usartSendByte(200,60,0xAF);
+			usartSendByte(200, 11, 3);
 			break;
 		case 4:
 			// Right
-			usartSendByte(200, 2, 54);
-			usartSendByte(200,60,0xAF);
+			usartSendByte(200, 11, 4);
 		default:
 			break;
 		}

@@ -26,18 +26,18 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private:
+	private:
     Ui::MainWindow *ui;
 	QPixmap btn_UP, btn_DOWN;
     int x_coord, y_coord;
-	unsigned int rx_ping_error_count, rx_crc_error_count;
-	bool data_started, packet_started, ack;
+	unsigned int rx_crc_error_count, ack_num;
+	bool data_started, packet_started, sending;
     bool port_opened;
     QList<QSerialPortInfo> serialPortInfoList;
 	QQueue<QByteArray> tx_queue;
     QByteArray bytes;
     QSerialPort serial;
-	QTimer rx_timer, tx_timer;
+	QTimer adc_timer, crc_error_timer, tx_timer, T1_timer, T2_timer;
 	QString st_yellow, st_green, st_red;
     unsigned char num_of_bytes;
     int process_packet(char command, QByteArray packet);
@@ -52,8 +52,11 @@ private slots:
     void readRequest();
     void on_battery_main_valueChanged(int value);
     void on_pushButton_clicked();
-    void rx_timer_timeout();
+	void crc_error_timeout();
 	void send_queue();
+	void get_adc1();
+	void T1_timeout();
+	void T2_timeout();
 };
 
 #endif // MAINWINDOW_H

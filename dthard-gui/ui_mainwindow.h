@@ -18,10 +18,10 @@
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -44,9 +44,7 @@ public:
     QComboBox *comPortList;
     QPushButton *pbComPortOpen;
     QPushButton *pushButton;
-    QLabel *lbSignal_Strenght_2;
-    QLineEdit *leCRC_err;
-    QLabel *label;
+    QTableWidget *tableStatus;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -174,21 +172,56 @@ public:
         pbComPortOpen->setFlat(false);
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(20, 130, 186, 51));
+        pushButton->setGeometry(QRect(20, 210, 186, 51));
         pushButton->setFocusPolicy(Qt::NoFocus);
         pushButton->setStyleSheet(QStringLiteral(""));
         pushButton->setFlat(false);
-        lbSignal_Strenght_2 = new QLabel(centralWidget);
-        lbSignal_Strenght_2->setObjectName(QStringLiteral("lbSignal_Strenght_2"));
-        lbSignal_Strenght_2->setEnabled(false);
-        lbSignal_Strenght_2->setGeometry(QRect(140, 10, 71, 20));
-        leCRC_err = new QLineEdit(centralWidget);
-        leCRC_err->setObjectName(QStringLiteral("leCRC_err"));
-        leCRC_err->setEnabled(false);
-        leCRC_err->setGeometry(QRect(140, 30, 113, 20));
-        label = new QLabel(centralWidget);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(40, 80, 46, 13));
+        tableStatus = new QTableWidget(centralWidget);
+        if (tableStatus->columnCount() < 2)
+            tableStatus->setColumnCount(2);
+        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
+        tableStatus->setHorizontalHeaderItem(0, __qtablewidgetitem);
+        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
+        tableStatus->setHorizontalHeaderItem(1, __qtablewidgetitem1);
+        if (tableStatus->rowCount() < 3)
+            tableStatus->setRowCount(3);
+        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
+        tableStatus->setVerticalHeaderItem(0, __qtablewidgetitem2);
+        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
+        tableStatus->setVerticalHeaderItem(1, __qtablewidgetitem3);
+        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
+        tableStatus->setVerticalHeaderItem(2, __qtablewidgetitem4);
+        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
+        tableStatus->setItem(0, 0, __qtablewidgetitem5);
+        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
+        tableStatus->setItem(0, 1, __qtablewidgetitem6);
+        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
+        tableStatus->setItem(1, 0, __qtablewidgetitem7);
+        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
+        tableStatus->setItem(1, 1, __qtablewidgetitem8);
+        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
+        tableStatus->setItem(2, 0, __qtablewidgetitem9);
+        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
+        tableStatus->setItem(2, 1, __qtablewidgetitem10);
+        tableStatus->setObjectName(QStringLiteral("tableStatus"));
+        tableStatus->setGeometry(QRect(10, 10, 231, 161));
+        tableStatus->setFocusPolicy(Qt::NoFocus);
+        tableStatus->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        tableStatus->setAutoScroll(false);
+        tableStatus->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        tableStatus->setTabKeyNavigation(false);
+        tableStatus->setProperty("showDropIndicator", QVariant(false));
+        tableStatus->setDragDropOverwriteMode(false);
+        tableStatus->setGridStyle(Qt::SolidLine);
+        tableStatus->setCornerButtonEnabled(false);
+        tableStatus->setRowCount(3);
+        tableStatus->setColumnCount(2);
+        tableStatus->horizontalHeader()->setVisible(true);
+        tableStatus->horizontalHeader()->setCascadingSectionResizes(false);
+        tableStatus->horizontalHeader()->setDefaultSectionSize(114);
+        tableStatus->verticalHeader()->setVisible(false);
+        tableStatus->verticalHeader()->setDefaultSectionSize(20);
+        tableStatus->verticalHeader()->setHighlightSections(false);
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
@@ -210,8 +243,33 @@ public:
         comPortList->setCurrentText(QString());
         pbComPortOpen->setText(QApplication::translate("MainWindow", "Open", 0));
         pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0));
-        lbSignal_Strenght_2->setText(QApplication::translate("MainWindow", "\320\236\321\210\320\270\320\261\320\272\320\270 CRC", 0));
-        label->setText(QApplication::translate("MainWindow", "TextLabel", 0));
+        QTableWidgetItem *___qtablewidgetitem = tableStatus->horizontalHeaderItem(0);
+        ___qtablewidgetitem->setText(QApplication::translate("MainWindow", "\320\237\320\260\321\200\320\260\320\274\320\265\321\202\321\200", 0));
+        QTableWidgetItem *___qtablewidgetitem1 = tableStatus->horizontalHeaderItem(1);
+        ___qtablewidgetitem1->setText(QApplication::translate("MainWindow", "\320\227\320\275\320\260\321\207\320\265\320\275\320\270\320\265", 0));
+        QTableWidgetItem *___qtablewidgetitem2 = tableStatus->verticalHeaderItem(0);
+        ___qtablewidgetitem2->setText(QApplication::translate("MainWindow", "CRC error", 0));
+        QTableWidgetItem *___qtablewidgetitem3 = tableStatus->verticalHeaderItem(1);
+        ___qtablewidgetitem3->setText(QApplication::translate("MainWindow", "Motor", 0));
+        QTableWidgetItem *___qtablewidgetitem4 = tableStatus->verticalHeaderItem(2);
+        ___qtablewidgetitem4->setText(QApplication::translate("MainWindow", "TX queue", 0));
+
+        const bool __sortingEnabled = tableStatus->isSortingEnabled();
+        tableStatus->setSortingEnabled(false);
+        QTableWidgetItem *___qtablewidgetitem5 = tableStatus->item(0, 0);
+        ___qtablewidgetitem5->setText(QApplication::translate("MainWindow", "CRC error", 0));
+        QTableWidgetItem *___qtablewidgetitem6 = tableStatus->item(0, 1);
+        ___qtablewidgetitem6->setText(QApplication::translate("MainWindow", "0", 0));
+        QTableWidgetItem *___qtablewidgetitem7 = tableStatus->item(1, 0);
+        ___qtablewidgetitem7->setText(QApplication::translate("MainWindow", "Motor", 0));
+        QTableWidgetItem *___qtablewidgetitem8 = tableStatus->item(1, 1);
+        ___qtablewidgetitem8->setText(QApplication::translate("MainWindow", "0", 0));
+        QTableWidgetItem *___qtablewidgetitem9 = tableStatus->item(2, 0);
+        ___qtablewidgetitem9->setText(QApplication::translate("MainWindow", "TX queue", 0));
+        QTableWidgetItem *___qtablewidgetitem10 = tableStatus->item(2, 1);
+        ___qtablewidgetitem10->setText(QApplication::translate("MainWindow", "0", 0));
+        tableStatus->setSortingEnabled(__sortingEnabled);
+
     } // retranslateUi
 
 };
