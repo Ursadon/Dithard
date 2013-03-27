@@ -183,8 +183,8 @@ public:
         tableStatus->setHorizontalHeaderItem(0, __qtablewidgetitem);
         QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
         tableStatus->setHorizontalHeaderItem(1, __qtablewidgetitem1);
-        if (tableStatus->rowCount() < 3)
-            tableStatus->setRowCount(3);
+        if (tableStatus->rowCount() < 4)
+            tableStatus->setRowCount(4);
         QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
         tableStatus->setVerticalHeaderItem(0, __qtablewidgetitem2);
         QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
@@ -192,17 +192,23 @@ public:
         QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
         tableStatus->setVerticalHeaderItem(2, __qtablewidgetitem4);
         QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        tableStatus->setItem(0, 0, __qtablewidgetitem5);
+        tableStatus->setVerticalHeaderItem(3, __qtablewidgetitem5);
         QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
-        tableStatus->setItem(0, 1, __qtablewidgetitem6);
+        tableStatus->setItem(0, 0, __qtablewidgetitem6);
         QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
-        tableStatus->setItem(1, 0, __qtablewidgetitem7);
+        tableStatus->setItem(0, 1, __qtablewidgetitem7);
         QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
-        tableStatus->setItem(1, 1, __qtablewidgetitem8);
+        tableStatus->setItem(1, 0, __qtablewidgetitem8);
         QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
-        tableStatus->setItem(2, 0, __qtablewidgetitem9);
+        tableStatus->setItem(1, 1, __qtablewidgetitem9);
         QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
-        tableStatus->setItem(2, 1, __qtablewidgetitem10);
+        tableStatus->setItem(2, 0, __qtablewidgetitem10);
+        QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
+        tableStatus->setItem(2, 1, __qtablewidgetitem11);
+        QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
+        tableStatus->setItem(3, 0, __qtablewidgetitem12);
+        QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
+        tableStatus->setItem(3, 1, __qtablewidgetitem13);
         tableStatus->setObjectName(QStringLiteral("tableStatus"));
         tableStatus->setGeometry(QRect(10, 10, 231, 161));
         tableStatus->setFocusPolicy(Qt::NoFocus);
@@ -214,9 +220,9 @@ public:
         tableStatus->setDragDropOverwriteMode(false);
         tableStatus->setGridStyle(Qt::SolidLine);
         tableStatus->setCornerButtonEnabled(false);
-        tableStatus->setRowCount(3);
+        tableStatus->setRowCount(4);
         tableStatus->setColumnCount(2);
-        tableStatus->horizontalHeader()->setVisible(true);
+        tableStatus->horizontalHeader()->setVisible(false);
         tableStatus->horizontalHeader()->setCascadingSectionResizes(false);
         tableStatus->horizontalHeader()->setDefaultSectionSize(114);
         tableStatus->verticalHeader()->setVisible(false);
@@ -253,21 +259,27 @@ public:
         ___qtablewidgetitem3->setText(QApplication::translate("MainWindow", "Motor", 0));
         QTableWidgetItem *___qtablewidgetitem4 = tableStatus->verticalHeaderItem(2);
         ___qtablewidgetitem4->setText(QApplication::translate("MainWindow", "TX queue", 0));
+        QTableWidgetItem *___qtablewidgetitem5 = tableStatus->verticalHeaderItem(3);
+        ___qtablewidgetitem5->setText(QApplication::translate("MainWindow", "Ping", 0));
 
         const bool __sortingEnabled = tableStatus->isSortingEnabled();
         tableStatus->setSortingEnabled(false);
-        QTableWidgetItem *___qtablewidgetitem5 = tableStatus->item(0, 0);
-        ___qtablewidgetitem5->setText(QApplication::translate("MainWindow", "CRC error", 0));
-        QTableWidgetItem *___qtablewidgetitem6 = tableStatus->item(0, 1);
-        ___qtablewidgetitem6->setText(QApplication::translate("MainWindow", "0", 0));
-        QTableWidgetItem *___qtablewidgetitem7 = tableStatus->item(1, 0);
-        ___qtablewidgetitem7->setText(QApplication::translate("MainWindow", "Motor", 0));
-        QTableWidgetItem *___qtablewidgetitem8 = tableStatus->item(1, 1);
-        ___qtablewidgetitem8->setText(QApplication::translate("MainWindow", "0", 0));
-        QTableWidgetItem *___qtablewidgetitem9 = tableStatus->item(2, 0);
-        ___qtablewidgetitem9->setText(QApplication::translate("MainWindow", "TX queue", 0));
-        QTableWidgetItem *___qtablewidgetitem10 = tableStatus->item(2, 1);
-        ___qtablewidgetitem10->setText(QApplication::translate("MainWindow", "0", 0));
+        QTableWidgetItem *___qtablewidgetitem6 = tableStatus->item(0, 0);
+        ___qtablewidgetitem6->setText(QApplication::translate("MainWindow", "CRC error", 0));
+        QTableWidgetItem *___qtablewidgetitem7 = tableStatus->item(0, 1);
+        ___qtablewidgetitem7->setText(QApplication::translate("MainWindow", "0", 0));
+        QTableWidgetItem *___qtablewidgetitem8 = tableStatus->item(1, 0);
+        ___qtablewidgetitem8->setText(QApplication::translate("MainWindow", "Motor", 0));
+        QTableWidgetItem *___qtablewidgetitem9 = tableStatus->item(1, 1);
+        ___qtablewidgetitem9->setText(QApplication::translate("MainWindow", "0", 0));
+        QTableWidgetItem *___qtablewidgetitem10 = tableStatus->item(2, 0);
+        ___qtablewidgetitem10->setText(QApplication::translate("MainWindow", "TX queue", 0));
+        QTableWidgetItem *___qtablewidgetitem11 = tableStatus->item(2, 1);
+        ___qtablewidgetitem11->setText(QApplication::translate("MainWindow", "0", 0));
+        QTableWidgetItem *___qtablewidgetitem12 = tableStatus->item(3, 0);
+        ___qtablewidgetitem12->setText(QApplication::translate("MainWindow", "Ping", 0));
+        QTableWidgetItem *___qtablewidgetitem13 = tableStatus->item(3, 1);
+        ___qtablewidgetitem13->setText(QApplication::translate("MainWindow", "0", 0));
         tableStatus->setSortingEnabled(__sortingEnabled);
 
     } // retranslateUi

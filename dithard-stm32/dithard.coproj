@@ -6,7 +6,7 @@
       <Compile>
         <Option name="OptimizationLevel" value="1"/>
         <Option name="UseFPU" value="0"/>
-        <Option name="UserEditCompiler" value=""/>
+        <Option name="UserEditCompiler" value="-std=gnu99"/>
         <Includepaths>
           <Includepath path="."/>
           <Includepath path="freertos/include"/>

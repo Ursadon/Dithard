@@ -413,7 +413,7 @@ void vThroughput(void *pvParameters) {
 }
 int main(void) {
 	SetSysClockTo24();
-	NVIC_Configuration();
+	//NVIC_Configuration();
 	SetupUSART();
 	SetupLED();
 	SetupADC();

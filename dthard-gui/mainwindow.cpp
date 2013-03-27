@@ -179,7 +179,7 @@ void MainWindow::on_pbComPortOpen_clicked()
 
 		crc_error_timer.start(300);
 		tx_timer.start(50);
-		adc_timer.start(300);
+		adc_timer.start(500);
 		T1_timer.start(1000);
 		ui->pbComPortOpen->setText("Close");
 		ui->battery_main->setEnabled(TRUE);
@@ -285,6 +285,7 @@ int MainWindow::process_packet(char command, QByteArray packet) {
 			ui->battery_main->setValue(val);
 			ack_num = 10;
 			sending = FALSE;
+			ui->tableStatus->item(3,1)->setText(QString::number(T2_timer.interval() - T2_timer.remainingTime()));
 			T2_timer.stop();
 			break;
 		case 11:
@@ -292,6 +293,7 @@ int MainWindow::process_packet(char command, QByteArray packet) {
 			ui->tableStatus->item(1,1)->setText(QString::number(packet.at(0)));
 			ack_num = 11;
 			sending = FALSE;
+			qDebug() << "ACK 11 received, T2: " << QString::number(T2_timer.interval() - T2_timer.remainingTime());
 			T2_timer.stop();
 			break;
 		default:
@@ -381,6 +383,7 @@ void MainWindow::get_adc1() {
 	tx_data.clear();
 }
 
+// Transmit buffer overload
 void MainWindow::T1_timeout() {
 	if (!tx_queue.isEmpty() && tx_queue.size() > 20) {
 		qDebug() << "TX buffer overload: " << tx_queue.size();
@@ -389,6 +392,7 @@ void MainWindow::T1_timeout() {
 	ui->tableStatus->item(2,1)->setText(QString::number(tx_queue.size()));
 }
 
+// Send packet timeout
 void MainWindow::T2_timeout() {
 	qDebug() << "T2 timeout";
 	sending = FALSE;
@@ -397,8 +401,8 @@ void MainWindow::T2_timeout() {
 
 void MainWindow::send_queue() {
 	if(!tx_queue.isEmpty() && sending == FALSE) {
+		T2_timer.start(300);
 		serial.write(tx_queue.dequeue());
-		T2_timer.start(500);
 		sending = TRUE;
 	}
 }
