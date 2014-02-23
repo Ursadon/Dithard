@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc 4.8.0 i686-w64-mingw32 -mcpu=cortex-m3 -mthumb -Wall -ffunction-sections -g -O0 -c -DSTM32F100RB -DSTM32F10X_MD_VL -DUSE_STDPERIPH_DRIVER -D__ASSEMBLY__ -I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\stm_lib\inc -I..\..\..\..\..\Dropbox\Priv\Projects\Dithard -I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\cmsis -I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\FreeRTOS\include -I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\FreeRTOS -I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\stm_lib -I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100 -I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\cmsis_boot">
+      <target file="startup_stm32f10x_md_vl.o" lastModified="14439099caa">
+         <source file="..\..\..\cmsis_boot\startup\startup_stm32f10x_md_vl.c" lastModified="1441c06e76b"/>
+      </target>
+      <target file="queue.o" lastModified="14439099fa2">
+         <source file="..\..\..\FreeRTOS\queue.c" lastModified="13cf1c9c5f0"/>
+      </target>
+      <target file="timers.o" lastModified="14439099dde">
+         <source file="..\..\..\FreeRTOS\timers.c" lastModified="13cf1c9cdc0"/>
+      </target>
+      <target file="port.o" lastModified="14439099fd4">
+         <source file="..\..\..\FreeRTOS\port.c" lastModified="13cf1c99710"/>
+      </target>
+      <target file="heap_2.o" lastModified="1443909a042">
+         <source file="..\..\..\FreeRTOS\heap_2.c" lastModified="13cf1c9b650"/>
+      </target>
+      <target file="list.o" lastModified="14439099f07">
+         <source file="..\..\..\FreeRTOS\list.c" lastModified="13cf1c98f40"/>
+      </target>
+      <target file="core_cm3.o" lastModified="14439099ce0">
+         <source file="..\..\..\cmsis\core_cm3.c" lastModified="1441c08b8b8"/>
+      </target>
+      <target file="system_stm32f10x.o" lastModified="14439099d1c">
+         <source file="..\..\..\cmsis_boot\system_stm32f10x.c" lastModified="1441c06e773"/>
+      </target>
+      <target file="croutine.o" lastModified="1443909a00b">
+         <source file="..\..\..\FreeRTOS\croutine.c" lastModified="13cf1c39bd0"/>
+      </target>
+      <target file="stm32f10x_flash.o" lastModified="14439099f57">
+         <source file="..\..\..\stm_lib\src\stm32f10x_flash.c" lastModified="1441c0a2ceb"/>
+      </target>
+      <target file="main.o" lastModified="1443a2b6794">
+         <source file="..\..\..\main.c" lastModified="1443a2b65ec"/>
+      </target>
+      <target file="stm32f10x_usart.o" lastModified="14439099ed2">
+         <source file="..\..\..\stm_lib\src\stm32f10x_usart.c" lastModified="1441c0a3101"/>
+      </target>
+      <target file="stm32f10x_gpio.o" lastModified="14439099d65">
+         <source file="..\..\..\stm_lib\src\stm32f10x_gpio.c" lastModified="1441c0a2122"/>
+      </target>
+      <target file="stm32f10x_rcc.o" lastModified="14439099e2e">
+         <source file="..\..\..\stm_lib\src\stm32f10x_rcc.c" lastModified="1441c06e764"/>
+      </target>
+      <target file="tasks.o" lastModified="14439099e82">
+         <source file="..\..\..\FreeRTOS\tasks.c" lastModified="13cf1c9cdc0"/>
+      </target>
+   </processor>
+</history>

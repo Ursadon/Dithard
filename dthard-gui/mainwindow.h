@@ -34,14 +34,14 @@ public:
 	bool data_started, packet_started, sending;
     bool port_opened;
     QList<QSerialPortInfo> serialPortInfoList;
-	QQueue<QByteArray> tx_queue;
+    QQueue<QByteArray> tx_queue, tx_queue_urgency;
     QByteArray bytes;
     QSerialPort serial;
-	QTimer adc_timer, crc_error_timer, tx_timer, T1_timer, T2_timer;
+    QTimer adc_timer, range_timer, crc_error_timer, tx_timer, T1_timer, T2_timer;
 	QString st_yellow, st_green, st_red;
     unsigned char num_of_bytes;
     int process_packet(char command, QByteArray packet);
-    int send_packet(char addr, unsigned char command, QByteArray data);
+    int send_packet(char addr, unsigned char command, QByteArray data, bool urgency);
 
 protected:
     void keyPressEvent(QKeyEvent *);
@@ -55,8 +55,12 @@ private slots:
 	void crc_error_timeout();
 	void send_queue();
 	void get_adc1();
+    void get_range();
 	void T1_timeout();
 	void T2_timeout();
+    void on_checkBox_stateChanged(int arg1);
+    void on_cb_acks_stateChanged(int arg1);
+    void on_checkBox_2_stateChanged(int arg1);
 };
 
 #endif // MAINWINDOW_H

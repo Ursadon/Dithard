@@ -57,10 +57,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	btn_DOWN.load(":/graphics/img/circle_green.png");
 	QObject::connect(&crc_error_timer, SIGNAL(timeout()), this, SLOT(crc_error_timeout()));
 	QObject::connect(&tx_timer, SIGNAL(timeout()), this, SLOT(send_queue()));
-	QObject::connect(&adc_timer, SIGNAL(timeout()), this, SLOT(get_adc1()));
+    QObject::connect(&adc_timer, SIGNAL(timeout()), this, SLOT(get_adc1()));
+    QObject::connect(&range_timer, SIGNAL(timeout()), this, SLOT(get_range()));
 	QObject::connect(&T1_timer, SIGNAL(timeout()), this, SLOT(T1_timeout()));
 	QObject::connect(&T2_timer, SIGNAL(timeout()), this, SLOT(T2_timeout()));
-	connect(&serial, SIGNAL(readyRead()), this, SLOT(readRequest()));
+    connect(&serial, SIGNAL(readyRead()), this, SLOT(readRequest()));
 	QList<QSerialPortInfo> serialPortInfoList = QSerialPortInfo::availablePorts();
 	foreach (const QSerialPortInfo &serialPortInfo, serialPortInfoList) {
 		if(serialPortInfo.isBusy()) {
@@ -105,8 +106,8 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 		if(x_coord < 100 ){
 			x_coord++;
 		}
-		command.append(1);
-		send_packet(5,11,command);
+        command.append(100);
+        send_packet(5,1,command,0);
 	}
 	if(event->key() == Qt::Key_Down)
 	{
@@ -114,22 +115,22 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 		if(x_coord > 0){
 			x_coord--;
 		}
-		command.append(2);
-		send_packet(5,11,command);
+        command.append(100);
+        send_packet(5,2,command,0);
 	}
 	if(event->key() == Qt::Key_Left)
 	{
 		ui->lb_LEFT->setPixmap(btn_DOWN);
 		y_coord++;
-		command.append(3);
-		send_packet(5,11,command);
+        command.append(100);
+        send_packet(5,3,command,0);
 	}
 	if(event->key() == Qt::Key_Right)
 	{
 		ui->lb_RIGHT->setPixmap(btn_DOWN);
 		y_coord--;
-		command.append(4);
-		send_packet(5,11,command);
+        command.append(100);
+        send_packet(5,4,command,0);
 	}
 	command.clear();
 	//ui->battery_main->setValue(x_coord);
@@ -146,7 +147,7 @@ void MainWindow::on_pbComPortOpen_clicked()
 			return;
 		}
 
-		if (!serial.setBaudRate(QSerialPort::Baud9600)) {
+        if (!serial.setBaudRate(QSerialPort::Baud9600)) {
 			//            processError(tr("Can't set baud rate 9600 baud to port %1, error code %2")
 			//                         .arg(serial.portName()).arg(serial.error()));
 			return;
@@ -178,8 +179,11 @@ void MainWindow::on_pbComPortOpen_clicked()
 		qDebug() << "PORT OPENED" << endl;
 
 		crc_error_timer.start(300);
-		tx_timer.start(50);
-		adc_timer.start(500);
+        tx_timer.start(50);
+        //adc_timer.start(500);
+        if(ui->checkBox->isChecked()){
+            range_timer.start(1000);
+        }
 		T1_timer.start(1000);
 		ui->pbComPortOpen->setText("Close");
 		ui->battery_main->setEnabled(TRUE);
@@ -192,6 +196,7 @@ void MainWindow::on_pbComPortOpen_clicked()
 		serial.close();
 		crc_error_timer.stop();
 		tx_timer.stop();
+        range_timer.stop();
 		T1_timer.stop();
 		T2_timer.stop();
 		qDebug() << "PORT CLOSED" << endl;
@@ -250,7 +255,7 @@ void MainWindow::readRequest() {
 					// Send NACK
 					bytes.clear();
 					bytes.append(0xAE);
-					send_packet(201,60,bytes);
+                    send_packet(201,60,bytes,0);
 				} else {
 					//                    qDebug() << "[RX] FEND" << endl
 					//                             << "[RX] ADDR: " << QString::number(static_cast<unsigned char>(bytes.at(addr))) << endl
@@ -276,7 +281,7 @@ void MainWindow::readRequest() {
 }
 
 int MainWindow::process_packet(char command, QByteArray packet) {
-	unsigned int val;
+    unsigned int val;
 	switch (command) {
 		case 10:
 			// ADC value
@@ -288,14 +293,42 @@ int MainWindow::process_packet(char command, QByteArray packet) {
 			ui->tableStatus->item(3,1)->setText(QString::number(T2_timer.interval() - T2_timer.remainingTime()));
 			T2_timer.stop();
 			break;
-		case 11:
-			// Motor feedback
-			ui->tableStatus->item(1,1)->setText(QString::number(packet.at(0)));
-			ack_num = 11;
+        case 1:
+            // Motor UP feedback
+            //ui->tableStatus->item(2,1)->setText(QString::number(packet.at(0)));
+            //ack_num = 11;
 			sending = FALSE;
-			qDebug() << "ACK 11 received, T2: " << QString::number(T2_timer.interval() - T2_timer.remainingTime());
+            qDebug() << "ACK 1 received (" << QString::number(packet.at(0)) << ") T2: " << QString::number(T2_timer.interval() - T2_timer.remainingTime());
 			T2_timer.stop();
 			break;
+        case 2:
+            // Motor DOWN feedback
+            sending = FALSE;
+            qDebug() << "ACK 2 received (" << QString::number(packet.at(0)) << ") T2: " << QString::number(T2_timer.interval() - T2_timer.remainingTime());
+            T2_timer.stop();
+            break;
+        case 3:
+            // Motor LEFT feedback
+            sending = FALSE;
+            qDebug() << "ACK 3 received (" << QString::number(packet.at(0)) << ") T2: " << QString::number(T2_timer.interval() - T2_timer.remainingTime());
+            T2_timer.stop();
+            break;
+        case 4:
+            // Motor RIGHT feedback
+            sending = FALSE;
+            qDebug() << "ACK 4 received (" << QString::number(packet.at(0)) << ") T2: " << QString::number(T2_timer.interval() - T2_timer.remainingTime());
+            T2_timer.stop();
+            break;
+        case 5:
+            // Range
+        val = ((static_cast<unsigned int>(packet.at(0)) & 0xFF) << 8)
+                + (static_cast<unsigned int>(packet.at(1)) & 0xFF);
+            ui->tableStatus->item(1,1)->setText(QString::number(int(val * 0.63)));
+            ack_num = 5;
+            sending = FALSE;
+            qDebug() << "ACK 5 received (" << QString::number(int(val * 0.63)) << ") T2: " << QString::number(T2_timer.interval() - T2_timer.remainingTime());
+            T2_timer.stop();
+            break;
 		default:
 			ui->tableStatus->item(1,1)->setText("N/A");
 			break;
@@ -303,7 +336,7 @@ int MainWindow::process_packet(char command, QByteArray packet) {
 	return 0;
 }
 
-int MainWindow::send_packet(char addr, unsigned char command, QByteArray data) {
+int MainWindow::send_packet(char addr, unsigned char command, QByteArray data, bool urgency = 0) {
 	QByteArray packet;
 	unsigned char tx_crc = 0xFF;
 	foreach (unsigned char k, data) {
@@ -316,8 +349,13 @@ int MainWindow::send_packet(char addr, unsigned char command, QByteArray data) {
 	packet.append(data.size()); // N
 	packet.append(data);
 	packet.append(tx_crc); // CRC
-	tx_queue.enqueue(packet);
-	//serial.write(packet);
+    if (ui->checkBox_2->isChecked()){
+        serial.write(packet);
+    } else if (urgency) {
+        tx_queue_urgency.enqueue(packet);
+    } else {
+        tx_queue.enqueue(packet);
+    }
 	packet.clear();
 	return 0;
 }
@@ -369,7 +407,7 @@ void MainWindow::on_battery_main_valueChanged(int value)
 }
 
 void MainWindow::on_pushButton_clicked() {
-	send_packet(5,7,"Peersxxx");
+    send_packet(201,5,0,0);
 }
 void MainWindow::crc_error_timeout() {
 	ui->tableStatus->item(0,1)->setText(QString::number(rx_crc_error_count));
@@ -379,14 +417,20 @@ void MainWindow::crc_error_timeout() {
 void MainWindow::get_adc1() {
 	QByteArray tx_data;
 	tx_data.append(0xD0);
-	send_packet(201,10,tx_data);
+    send_packet(201,10,tx_data,0);
 	tx_data.clear();
 }
-
+void MainWindow::get_range() {
+    send_packet(201,5,0,1);
+}
 // Transmit buffer overload
 void MainWindow::T1_timeout() {
-	if (!tx_queue.isEmpty() && tx_queue.size() > 20) {
-		qDebug() << "TX buffer overload: " << tx_queue.size();
+    if (!tx_queue_urgency.isEmpty() && tx_queue_urgency.size() > 10) {
+        qDebug() << "TX urgency buffer overload: " << tx_queue_urgency.size();
+        tx_queue_urgency.clear();
+    }
+    if (!tx_queue.isEmpty() && tx_queue.size() > 2) {
+        qDebug() << "TX normal buffer overload: " << tx_queue.size();
 		tx_queue.clear();
 	}
 	ui->tableStatus->item(2,1)->setText(QString::number(tx_queue.size()));
@@ -400,9 +444,73 @@ void MainWindow::T2_timeout() {
 }
 
 void MainWindow::send_queue() {
-	if(!tx_queue.isEmpty() && sending == FALSE) {
-		T2_timer.start(300);
-		serial.write(tx_queue.dequeue());
-		sending = TRUE;
-	}
+    if(!tx_queue_urgency.isEmpty() && sending == FALSE) {
+        if(ui->cb_acks->isChecked()){
+            T2_timer.start(300);
+            serial.write(tx_queue_urgency.dequeue());
+            sending = TRUE;
+        } else {
+            serial.write(tx_queue_urgency.dequeue());
+        }
+
+    }
+    if(!tx_queue.isEmpty() && sending == FALSE) {
+        if(ui->cb_acks->isChecked()){
+            T2_timer.start(300);
+            serial.write(tx_queue.dequeue());
+            sending = TRUE;
+        } else {
+            serial.write(tx_queue.dequeue());
+        }
+    }
+}
+
+void MainWindow::on_checkBox_stateChanged(int arg1)
+{
+    switch (arg1) {
+    case 2:
+        range_timer.start(1000);
+        break;
+    case 0:
+        range_timer.stop();
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::on_cb_acks_stateChanged(int arg1)
+{
+    QByteArray tx_data;
+    switch (arg1) {
+    case 2:
+        tx_data.append(0x50);
+        send_packet(201,0,tx_data,1);
+        tx_data.clear();
+        T1_timer.start(1000);
+        break;
+    case 0:
+        tx_data.append(0x51);
+        send_packet(201,0,tx_data,1);
+        tx_data.clear();
+        sending = FALSE;
+        T1_timer.stop();
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::on_checkBox_2_stateChanged(int arg1)
+{
+    switch (arg1) {
+    case 2: // Enable
+
+        break;
+    case 0: // Disable
+
+        break;
+    default:
+        break;
+    }
 }

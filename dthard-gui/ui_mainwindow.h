@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.0.1
+** Created by: Qt User Interface Compiler version 5.2.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
@@ -43,8 +44,10 @@ public:
     QProgressBar *signal_strenght;
     QComboBox *comPortList;
     QPushButton *pbComPortOpen;
-    QPushButton *pushButton;
     QTableWidget *tableStatus;
+    QCheckBox *checkBox;
+    QCheckBox *cb_acks;
+    QCheckBox *checkBox_2;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -170,12 +173,6 @@ public:
         pbComPortOpen->setFocusPolicy(Qt::NoFocus);
         pbComPortOpen->setContextMenuPolicy(Qt::NoContextMenu);
         pbComPortOpen->setFlat(false);
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(20, 210, 186, 51));
-        pushButton->setFocusPolicy(Qt::NoFocus);
-        pushButton->setStyleSheet(QStringLiteral(""));
-        pushButton->setFlat(false);
         tableStatus = new QTableWidget(centralWidget);
         if (tableStatus->columnCount() < 2)
             tableStatus->setColumnCount(2);
@@ -228,6 +225,24 @@ public:
         tableStatus->verticalHeader()->setVisible(false);
         tableStatus->verticalHeader()->setDefaultSectionSize(20);
         tableStatus->verticalHeader()->setHighlightSections(false);
+        checkBox = new QCheckBox(centralWidget);
+        checkBox->setObjectName(QStringLiteral("checkBox"));
+        checkBox->setGeometry(QRect(20, 180, 91, 17));
+        checkBox->setMouseTracking(false);
+        checkBox->setFocusPolicy(Qt::NoFocus);
+        checkBox->setChecked(false);
+        cb_acks = new QCheckBox(centralWidget);
+        cb_acks->setObjectName(QStringLiteral("cb_acks"));
+        cb_acks->setGeometry(QRect(140, 180, 91, 17));
+        cb_acks->setMouseTracking(false);
+        cb_acks->setFocusPolicy(Qt::NoFocus);
+        cb_acks->setChecked(true);
+        cb_acks->setTristate(false);
+        checkBox_2 = new QCheckBox(centralWidget);
+        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+        checkBox_2->setGeometry(QRect(20, 200, 121, 17));
+        checkBox_2->setMouseTracking(false);
+        checkBox_2->setFocusPolicy(Qt::NoFocus);
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
@@ -248,7 +263,6 @@ public:
         lbSignal_Strenght->setText(QApplication::translate("MainWindow", "\320\243\321\200\320\276\320\262\320\265\320\275\321\214 \321\201\320\270\320\263\320\275\320\260\320\273\320\260:", 0));
         comPortList->setCurrentText(QString());
         pbComPortOpen->setText(QApplication::translate("MainWindow", "Open", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0));
         QTableWidgetItem *___qtablewidgetitem = tableStatus->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QApplication::translate("MainWindow", "\320\237\320\260\321\200\320\260\320\274\320\265\321\202\321\200", 0));
         QTableWidgetItem *___qtablewidgetitem1 = tableStatus->horizontalHeaderItem(1);
@@ -256,7 +270,7 @@ public:
         QTableWidgetItem *___qtablewidgetitem2 = tableStatus->verticalHeaderItem(0);
         ___qtablewidgetitem2->setText(QApplication::translate("MainWindow", "CRC error", 0));
         QTableWidgetItem *___qtablewidgetitem3 = tableStatus->verticalHeaderItem(1);
-        ___qtablewidgetitem3->setText(QApplication::translate("MainWindow", "Motor", 0));
+        ___qtablewidgetitem3->setText(QApplication::translate("MainWindow", "Range", 0));
         QTableWidgetItem *___qtablewidgetitem4 = tableStatus->verticalHeaderItem(2);
         ___qtablewidgetitem4->setText(QApplication::translate("MainWindow", "TX queue", 0));
         QTableWidgetItem *___qtablewidgetitem5 = tableStatus->verticalHeaderItem(3);
@@ -269,7 +283,7 @@ public:
         QTableWidgetItem *___qtablewidgetitem7 = tableStatus->item(0, 1);
         ___qtablewidgetitem7->setText(QApplication::translate("MainWindow", "0", 0));
         QTableWidgetItem *___qtablewidgetitem8 = tableStatus->item(1, 0);
-        ___qtablewidgetitem8->setText(QApplication::translate("MainWindow", "Motor", 0));
+        ___qtablewidgetitem8->setText(QApplication::translate("MainWindow", "Range", 0));
         QTableWidgetItem *___qtablewidgetitem9 = tableStatus->item(1, 1);
         ___qtablewidgetitem9->setText(QApplication::translate("MainWindow", "0", 0));
         QTableWidgetItem *___qtablewidgetitem10 = tableStatus->item(2, 0);
@@ -282,6 +296,9 @@ public:
         ___qtablewidgetitem13->setText(QApplication::translate("MainWindow", "0", 0));
         tableStatus->setSortingEnabled(__sortingEnabled);
 
+        checkBox->setText(QApplication::translate("MainWindow", "RangeMeter", 0));
+        cb_acks->setText(QApplication::translate("MainWindow", "Enable ACKs", 0));
+        checkBox_2->setText(QApplication::translate("MainWindow", "Disable TX Queue", 0));
     } // retranslateUi
 
 };

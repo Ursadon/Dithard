@@ -1,4 +1,0 @@
-Dithard
-=======
-
-Robo-tank
