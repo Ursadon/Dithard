@@ -1,22 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
    <processor signature="arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -g -nostartfiles -Map=dithard-stm32f100.map -O0 --gc-sections -LF:\dev\CoIDE\configuration\ProgramData\dithard-stm32f100 -TF:\dev\CoIDE\configuration\ProgramData\dithard-stm32f100/arm-gcc-link.ld -g">
-      <target file="dithard-stm32f100.elf" lastModified="1443a2b6982">
-         <source file="..\obj\startup_stm32f10x_md_vl.o" lastModified="14439099caa"/>
-         <source file="..\obj\core_cm3.o" lastModified="14439099ce0"/>
-         <source file="..\obj\system_stm32f10x.o" lastModified="14439099d1c"/>
-         <source file="..\obj\stm32f10x_gpio.o" lastModified="14439099d65"/>
-         <source file="..\obj\main.o" lastModified="1443a2b6794"/>
-         <source file="..\obj\timers.o" lastModified="14439099dde"/>
-         <source file="..\obj\stm32f10x_rcc.o" lastModified="14439099e2e"/>
-         <source file="..\obj\tasks.o" lastModified="14439099e82"/>
-         <source file="..\obj\stm32f10x_usart.o" lastModified="14439099ed2"/>
-         <source file="..\obj\list.o" lastModified="14439099f07"/>
-         <source file="..\obj\stm32f10x_flash.o" lastModified="14439099f57"/>
-         <source file="..\obj\queue.o" lastModified="14439099fa2"/>
-         <source file="..\obj\port.o" lastModified="14439099fd4"/>
-         <source file="..\obj\croutine.o" lastModified="1443909a00b"/>
-         <source file="..\obj\heap_2.o" lastModified="1443909a042"/>
+      <target file="dithard-stm32f100.elf" lastModified="1445ea2e1b2">
+         <source file="..\obj\startup_stm32f10x_md_vl.o" lastModified="1445e9dd050"/>
+         <source file="..\obj\core_cm3.o" lastModified="1445e9dd096"/>
+         <source file="..\obj\system_stm32f10x.o" lastModified="1445e9dd0e2"/>
+         <source file="..\obj\hd44780_driver.o" lastModified="1445e9e28c5"/>
+         <source file="..\obj\stm32f10x_gpio.o" lastModified="1445e9dd189"/>
+         <source file="..\obj\main.o" lastModified="1445ea2dfa5"/>
+         <source file="..\obj\timers.o" lastModified="1445e9dd22c"/>
+         <source file="..\obj\stm32f10x_rcc.o" lastModified="1445e9dd28b"/>
+         <source file="..\obj\tasks.o" lastModified="1445e9dd2f4"/>
+         <source file="..\obj\stm32f10x_usart.o" lastModified="1445e9dd351"/>
+         <source file="..\obj\list.o" lastModified="1445e9dd393"/>
+         <source file="..\obj\stm32f10x_flash.o" lastModified="1445e9dd3f0"/>
+         <source file="..\obj\queue.o" lastModified="1445e9dd447"/>
+         <source file="..\obj\port.o" lastModified="1445e9dd488"/>
+         <source file="..\obj\croutine.o" lastModified="1445e9dd4cf"/>
+         <source file="..\obj\heap_2.o" lastModified="1445e9dd516"/>
       </target>
    </processor>
 </history>

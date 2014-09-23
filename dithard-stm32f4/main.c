@@ -18,16 +18,16 @@ void vLED(void *pvParameters) {
 
 	for (;;) {
 		GPIO_SetBits(GPIOD, GPIO_Pin_12);
-		vTaskDelay(500);
+		vTaskDelay(1000);
 		GPIO_SetBits(GPIOD, GPIO_Pin_13);
-		vTaskDelay(500);
+		vTaskDelay(1000);
 		GPIO_SetBits(GPIOD, GPIO_Pin_14);
-		vTaskDelay(500);
+		vTaskDelay(1000);
 		GPIO_SetBits(GPIOD, GPIO_Pin_15);
-		vTaskDelay(500);
+		vTaskDelay(1000);
 		GPIO_ResetBits(GPIOD,
 				GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
-		vTaskDelay(500);
+		vTaskDelay(1000);
 	}
 }
 
@@ -39,8 +39,16 @@ void Out_Data_SPI2(uint8_t SPI_Data)
 	SPI_SSOutputCmd(SPI2,ENABLE);
 	SPI_Cmd(SPI2, DISABLE);
 }
+uint8_t SPI2_send(uint8_t data){
+
+	SPI2->DR = data; // write data to be transmitted to the SPI data register
+	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
+	while( !(SPI2->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
+	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
+	return SPI2->DR; // return received data from SPI data register
+}
 void vSPI(void *pvParameters) {
-	uint8_t SPI_Data = 0x80;
+	uint8_t SPI_Data = 0xFF;
 
 	/*------ ENABLE all the clocks and the SPI2-Interface ------*/
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
@@ -71,11 +79,11 @@ void vSPI(void *pvParameters) {
 	/*------ SPI init structure ------*/
 	SPI_I2S_DeInit(SPI2);
 	SPI_InitTypeDef SPI_InitTypeDefStruct;
-	SPI_InitTypeDefStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;
+	SPI_InitTypeDefStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;
 	SPI_InitTypeDefStruct.SPI_Direction		= SPI_Direction_2Lines_FullDuplex;
-	SPI_InitTypeDefStruct.SPI_Mode			= SPI_Mode_Slave;
+	SPI_InitTypeDefStruct.SPI_Mode			= SPI_Mode_Master;
 	SPI_InitTypeDefStruct.SPI_DataSize		= SPI_DataSize_8b;
-	SPI_InitTypeDefStruct.SPI_NSS			= SPI_NSS_Hard;
+	SPI_InitTypeDefStruct.SPI_NSS			= SPI_NSS_Soft | SPI_NSSInternalSoft_Set;
 	SPI_InitTypeDefStruct.SPI_FirstBit		= SPI_FirstBit_MSB;
 	SPI_InitTypeDefStruct.SPI_CPOL			= SPI_CPOL_Low;
 	SPI_InitTypeDefStruct.SPI_CPHA			= SPI_CPHA_1Edge;
@@ -94,15 +102,15 @@ void vSPI(void *pvParameters) {
 //			taskYIELD();
 //		};
 //		SPI_I2S_SendData(SPI2, adress);
-		while(!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE)){
-			taskYIELD();
-		};
-		SPI_Data = SPI_I2S_ReceiveData(SPI2); //Clear RXNE bit
-		SPI_I2S_SendData(SPI2, SPI_Data);
-		while(!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE)){
-			taskYIELD();
-		};
-		//GPIO_SetBits(GPIOE, GPIO_Pin_3);
+		SPI_Data = SPI2_send(0x00);
+		SPI_Data = SPI2_send(0x00);
+		SPI_Data = SPI2_send(0x00);
+		SPI_Data = SPI2_send(0x00);
+//		SPI_Data = SPI_I2S_ReceiveData(SPI2); //Clear RXNE bit
+//		SPI_I2S_SendData(SPI2, SPI_Data);
+//		while(!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE)){
+//			taskYIELD();
+//		};
 
 		//return  SPI_I2S_ReceiveData(SPI2);
 
@@ -113,9 +121,8 @@ int main(void) {
 	while (!RCC_WaitForHSEStartUp()) {
 	}
 
-	xTaskCreate( vLED, ( signed char * ) "vLED", configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	xTaskCreate( vSPI, ( signed char * ) "vSPI", configMINIMAL_STACK_SIZE,
-			NULL, 0, ( xTaskHandle * ) NULL);
+	xTaskCreate( vLED, "vLED", configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+	xTaskCreate( vSPI, "vSPI", configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
 	vTaskStartScheduler();
 	return 0;
 }

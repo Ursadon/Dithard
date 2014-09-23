@@ -1,22 +1,22 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
-   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wall -g -nostartfiles -Map=dithard-stm32f4.map -O1 --gc-sections -LF:\dev\CoIDE\configuration\ProgramData\dithard-stm32f4 -TF:\dev\CoIDE\configuration\ProgramData\dithard-stm32f4/arm-gcc-link.ld -g">
-      <target file="dithard-stm32f4.elf" lastModified="143bf316a53">
-         <source file="..\obj\startup_stm32f4xx.o" lastModified="143b57a4816"/>
-         <source file="..\obj\main.o" lastModified="143bf31686f"/>
-         <source file="..\obj\stm32f4xx_rcc.o" lastModified="143b57a48dd"/>
-         <source file="..\obj\timers.o" lastModified="143b57a4909"/>
-         <source file="..\obj\tasks.o" lastModified="143b57a4987"/>
-         <source file="..\obj\stm32f4xx_gpio.o" lastModified="143b57a49d9"/>
-         <source file="..\obj\stm32f4xx_flash.o" lastModified="143b57a4a44"/>
-         <source file="..\obj\list.o" lastModified="143b57a4a7c"/>
-         <source file="..\obj\system_stm32f4xx.o" lastModified="143b57a4ac1"/>
-         <source file="..\obj\syscalls.o" lastModified="143b57a4b00"/>
-         <source file="..\obj\queue.o" lastModified="143b57a4b66"/>
-         <source file="..\obj\port.o" lastModified="143b57a4b9f"/>
-         <source file="..\obj\croutine.o" lastModified="143b57a4be4"/>
-         <source file="..\obj\stm32f4xx_spi.o" lastModified="143b57a4c48"/>
-         <source file="..\obj\heap_2.o" lastModified="143b57a4c85"/>
+   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wall -g -nostartfiles -Map=dithard-stm32f4.map -O0 --gc-sections -LF:\dev\CoIDE\configuration\ProgramData\dithard-stm32f4 -TF:\dev\CoIDE\configuration\ProgramData\dithard-stm32f4/arm-gcc-link.ld -g">
+      <target file="dithard-stm32f4.elf" lastModified="148a2f0cdfa">
+         <source file="..\obj\startup_stm32f4xx.o" lastModified="148a290d86e"/>
+         <source file="..\obj\main.o" lastModified="148a2f0cc44"/>
+         <source file="..\obj\stm32f4xx_rcc.o" lastModified="148a290d907"/>
+         <source file="..\obj\timers.o" lastModified="148a290d930"/>
+         <source file="..\obj\tasks.o" lastModified="148a290d97d"/>
+         <source file="..\obj\stm32f4xx_gpio.o" lastModified="148a290d9b4"/>
+         <source file="..\obj\stm32f4xx_flash.o" lastModified="148a290d9f4"/>
+         <source file="..\obj\list.o" lastModified="148a290da1d"/>
+         <source file="..\obj\system_stm32f4xx.o" lastModified="148a290da4a"/>
+         <source file="..\obj\syscalls.o" lastModified="148a290da77"/>
+         <source file="..\obj\queue.o" lastModified="148a290dab8"/>
+         <source file="..\obj\port.o" lastModified="148a290dadf"/>
+         <source file="..\obj\croutine.o" lastModified="148a290db09"/>
+         <source file="..\obj\stm32f4xx_spi.o" lastModified="148a290db49"/>
+         <source file="..\obj\heap_2.o" lastModified="148a290db73"/>
       </target>
    </processor>
 </history>

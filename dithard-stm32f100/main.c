@@ -4,6 +4,7 @@
 #include <stm32f10x_flash.h>
 #include <stm32f10x_usart.h>
 #include <string.h> /* memset */
+#include "hd44780\hd44780_driver.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -268,7 +269,29 @@ void SetSysClockTo24(void) {
 		}
 	}
 }
+void vLCD(void *pvParameters) {
+	uint8_t user_char[8]; //Сюда будем записывать пользовательский символ
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE); //Вкл порт С
+	lcd_init(); //Инициализируем дисплей
 
+	user_char[0]=0b01110; //А вот тут
+	user_char[1]=0b10001; // рисуем
+	user_char[2]=0b10001; // наш символ
+	user_char[3]=0b10001; //
+	user_char[4]=0b10001; // Это типа рыба :-)
+	user_char[5]=0b01010;
+	user_char[6]=0b10001;
+	user_char[7]=0b10001;
+	lcd_set_user_char(0, user_char); // Наша рыба это символ номер ноль
+
+	lcd_out("This is fish"); //Выводм надпись в нулевую строку
+	lcd_set_xy(0,1); //переводим курсор в первую строку
+	lcd_send(0,DATA); //выводм символ номер ноль
+	lcd_set_state(LCD_ENABLE, CURSOR_DISABLE, NO_BLINK); //Включаем курсор и мигалку
+	for (;;) {
+		taskYIELD();
+	}
+}
 void vLed(void *pvParameters) {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
@@ -408,7 +431,9 @@ int main(void)
 			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
 	xTaskCreate( vScanUsart, ( signed char * ) "vScanUsart",
 			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	xTaskCreate( vRange, ( signed char * ) "vRange",
+	//xTaskCreate( vRange, ( signed char * ) "vRange",
+	//		configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+	xTaskCreate( vLCD, ( signed char * ) "vLCD",
 			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
 	vTaskStartScheduler();
 	return 0;
