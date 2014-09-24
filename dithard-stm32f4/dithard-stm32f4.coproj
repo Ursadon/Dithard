@@ -79,52 +79,53 @@
   </Components>
   <Files>
     <File name="FreeRTOS-CM4/include/queue.h" path="FreeRTOS-CM4/include/queue.h" type="1"/>
-    <File name="cmsis_lib/include/stm32f4xx_flash.h" path="cmsis_lib/include/stm32f4xx_flash.h" type="1"/>
     <File name="cmsis_lib/source/stm32f4xx_gpio.c" path="cmsis_lib/source/stm32f4xx_gpio.c" type="1"/>
+    <File name="cmsis_lib/include/stm32f4xx_flash.h" path="cmsis_lib/include/stm32f4xx_flash.h" type="1"/>
+    <File name="cmsis_boot" path="" type="2"/>
+    <File name="FreeRTOS-CM4/tasks.c" path="FreeRTOS-CM4/tasks.c" type="1"/>
+    <File name="FreeRTOS-CM4/include/croutine.h" path="FreeRTOS-CM4/include/croutine.h" type="1"/>
+    <File name="cmsis_lib/source/stm32f4xx_flash.c" path="cmsis_lib/source/stm32f4xx_flash.c" type="1"/>
+    <File name="cmsis/core_cm4_simd.h" path="cmsis/core_cm4_simd.h" type="1"/>
+    <File name="cmsis_boot/startup" path="" type="2"/>
+    <File name="cmsis_boot/stm32f4xx.h" path="cmsis_boot/stm32f4xx.h" type="1"/>
+    <File name="cmsis_lib/source/stm32f4xx_spi.c" path="cmsis_lib/source/stm32f4xx_spi.c" type="1"/>
+    <File name="cmsis/core_cmFunc.h" path="cmsis/core_cmFunc.h" type="1"/>
+    <File name="cmsis/core_cm4.h" path="cmsis/core_cm4.h" type="1"/>
+    <File name="FreeRTOS-CM4/include/timers.h" path="FreeRTOS-CM4/include/timers.h" type="1"/>
+    <File name="syscalls/syscalls.c" path="syscalls/syscalls.c" type="1"/>
+    <File name="cmsis_lib/source" path="" type="2"/>
+    <File name="cmsis_boot/stm32f4xx_conf.h" path="cmsis_boot/stm32f4xx_conf.h" type="1"/>
+    <File name="cmsis_boot/system_stm32f4xx.h" path="cmsis_boot/system_stm32f4xx.h" type="1"/>
+    <File name="cmsis_lib/include/stm32f4xx_rcc.h" path="cmsis_lib/include/stm32f4xx_rcc.h" type="1"/>
+    <File name="FreeRTOS-CM4/include/list.h" path="FreeRTOS-CM4/include/list.h" type="1"/>
+    <File name="FreeRTOS-CM4/include" path="" type="2"/>
     <File name="FreeRTOS-CM4/include/projdefs.h" path="FreeRTOS-CM4/include/projdefs.h" type="1"/>
     <File name="cmsis_boot/startup/startup_stm32f4xx.c" path="cmsis_boot/startup/startup_stm32f4xx.c" type="1"/>
     <File name="cmsis_lib/source/stm32f4xx_rcc.c" path="cmsis_lib/source/stm32f4xx_rcc.c" type="1"/>
     <File name="cmsis/core_cmInstr.h" path="cmsis/core_cmInstr.h" type="1"/>
-    <File name="FreeRTOS-CM4/tasks.c" path="FreeRTOS-CM4/tasks.c" type="1"/>
-    <File name="cmsis_boot" path="" type="2"/>
     <File name="FreeRTOS-CM4/include/FreeRTOSConfig.h" path="FreeRTOS-CM4/include/FreeRTOSConfig.h" type="1"/>
-    <File name="FreeRTOS-CM4/include/croutine.h" path="FreeRTOS-CM4/include/croutine.h" type="1"/>
     <File name="FreeRTOS-CM4/port.c" path="FreeRTOS-CM4/port.c" type="1"/>
-    <File name="cmsis/core_cm4_simd.h" path="cmsis/core_cm4_simd.h" type="1"/>
-    <File name="cmsis_boot/startup" path="" type="2"/>
-    <File name="cmsis_lib/source/stm32f4xx_flash.c" path="cmsis_lib/source/stm32f4xx_flash.c" type="1"/>
-    <File name="cmsis_boot/stm32f4xx.h" path="cmsis_boot/stm32f4xx.h" type="1"/>
-    <File name="cmsis_lib/source/stm32f4xx_spi.c" path="cmsis_lib/source/stm32f4xx_spi.c" type="1"/>
-    <File name="cmsis/core_cmFunc.h" path="cmsis/core_cmFunc.h" type="1"/>
-    <File name="FreeRTOS-CM4/include/timers.h" path="FreeRTOS-CM4/include/timers.h" type="1"/>
     <File name="cmsis_boot/system_stm32f4xx.c" path="cmsis_boot/system_stm32f4xx.c" type="1"/>
-    <File name="cmsis/core_cm4.h" path="cmsis/core_cm4.h" type="1"/>
+    <File name="FreeRTOS-CM4/include/semphr.h" path="FreeRTOS-CM4/include/semphr.h" type="1"/>
     <File name="cmsis_lib/include/stm32f4xx_spi.h" path="cmsis_lib/include/stm32f4xx_spi.h" type="1"/>
     <File name="FreeRTOS-CM4/queue.c" path="FreeRTOS-CM4/queue.c" type="1"/>
-    <File name="FreeRTOS-CM4/include/semphr.h" path="FreeRTOS-CM4/include/semphr.h" type="1"/>
     <File name="FreeRTOS-CM4/include/portmacro.h" path="FreeRTOS-CM4/include/portmacro.h" type="1"/>
     <File name="FreeRTOS-CM4/include/mpu_wrappers.h" path="FreeRTOS-CM4/include/mpu_wrappers.h" type="1"/>
-    <File name="FreeRTOS-CM4/heap_2.c" path="FreeRTOS-CM4/heap_2.c" type="1"/>
     <File name="cmsis" path="" type="2"/>
-    <File name="cmsis_lib" path="" type="2"/>
+    <File name="FreeRTOS-CM4/heap_2.c" path="FreeRTOS-CM4/heap_2.c" type="1"/>
     <File name="FreeRTOS-CM4/include/StackMacros.h" path="FreeRTOS-CM4/include/StackMacros.h" type="1"/>
-    <File name="syscalls/syscalls.c" path="syscalls/syscalls.c" type="1"/>
+    <File name="cmsis_lib" path="" type="2"/>
+    <File name="nrf24l01_registers.h" path="nrf24l01_registers.h" type="1"/>
     <File name="FreeRTOS-CM4/include/FreeRTOS.h" path="FreeRTOS-CM4/include/FreeRTOS.h" type="1"/>
-    <File name="cmsis_lib/source" path="" type="2"/>
     <File name="FreeRTOS-CM4" path="" type="2"/>
     <File name="cmsis_lib/include/stm32f4xx_gpio.h" path="cmsis_lib/include/stm32f4xx_gpio.h" type="1"/>
     <File name="syscalls" path="" type="2"/>
-    <File name="FreeRTOS-CM4/include/portable.h" path="FreeRTOS-CM4/include/portable.h" type="1"/>
     <File name="FreeRTOS-CM4/timers.c" path="FreeRTOS-CM4/timers.c" type="1"/>
-    <File name="cmsis_boot/stm32f4xx_conf.h" path="cmsis_boot/stm32f4xx_conf.h" type="1"/>
-    <File name="cmsis_boot/system_stm32f4xx.h" path="cmsis_boot/system_stm32f4xx.h" type="1"/>
+    <File name="FreeRTOS-CM4/include/portable.h" path="FreeRTOS-CM4/include/portable.h" type="1"/>
     <File name="cmsis_lib/include" path="" type="2"/>
-    <File name="FreeRTOS-CM4/list.c" path="FreeRTOS-CM4/list.c" type="1"/>
     <File name="FreeRTOS-CM4/include/task.h" path="FreeRTOS-CM4/include/task.h" type="1"/>
-    <File name="cmsis_lib/include/stm32f4xx_rcc.h" path="cmsis_lib/include/stm32f4xx_rcc.h" type="1"/>
+    <File name="FreeRTOS-CM4/list.c" path="FreeRTOS-CM4/list.c" type="1"/>
     <File name="FreeRTOS-CM4/croutine.c" path="FreeRTOS-CM4/croutine.c" type="1"/>
-    <File name="FreeRTOS-CM4/include/list.h" path="FreeRTOS-CM4/include/list.h" type="1"/>
-    <File name="FreeRTOS-CM4/include" path="" type="2"/>
     <File name="main.c" path="main.c" type="1"/>
   </Files>
 </Project>

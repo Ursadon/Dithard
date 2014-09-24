@@ -53,14 +53,14 @@
 
 /* Bit Mnemonics */
 
-/* configuratio nregister */
-#define MASK_RX_DR  6
-#define MASK_TX_DS  5
-#define MASK_MAX_RT 4
-#define EN_CRC      3
-#define CRCO        2
-#define PWR_UP      1
-#define PRIM_RX     0
+/* configuration register */
+#define MASK_RX_DR  0x40
+#define MASK_TX_DS  0x20
+#define MASK_MAX_RT 0x10
+#define EN_CRC      0x08
+#define CRCO        0x04
+#define PWR_UP      0x02
+#define PRIM_RX     0x01
 
 /* enable auto acknowledgment */
 #define ENAA_P5     5

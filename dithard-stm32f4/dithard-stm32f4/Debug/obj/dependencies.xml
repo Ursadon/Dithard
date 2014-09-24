@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dependencies>
-   <includePath signature="/I..\..\..\..\..\Dropbox\Priv\Projects\Dithard /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\FreeRTOS-CM4\include /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\cmsis /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4 /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\FreeRTOS-CM4 /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\cmsis_lib\include /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\cmsis_lib /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\cmsis_boot">
+   <includePath signature="/I..\..\..\..\..\Dropbox\Priv\Projects\Dithard /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\FreeRTOS-CM4\include /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\cmsis /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4 /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\FreeRTOS-CM4 /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\cmsis_lib\include /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\cmsis_lib /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\cmsis_boot /I..\..\..\..\..\Dropbox\Priv\Projects">
       <source file="..\..\..\cmsis_lib\source\stm32f4xx_gpio.c" lastModified="143b4fbe19c">
          <include file="..\..\..\cmsis_lib\include\stm32f4xx_gpio.h"/>
          <include file="..\..\..\cmsis_lib\include\stm32f4xx_rcc.h"/>
@@ -58,11 +58,11 @@
       <source file="..\..\..\cmsis_lib\include\stm32f4xx_gpio.h" lastModified="143b4fbe19b">
          <include file="..\..\..\cmsis_boot\stm32f4xx.h"/>
       </source>
+      <source file="..\..\..\syscalls\syscalls.c" lastModified="143b501514c">
+      </source>
       <source file="..\..\..\cmsis_lib\source\stm32f4xx_spi.c" lastModified="143b4fbdbe2">
          <include file="..\..\..\cmsis_lib\include\stm32f4xx_spi.h"/>
          <include file="..\..\..\cmsis_lib\include\stm32f4xx_rcc.h"/>
-      </source>
-      <source file="..\..\..\syscalls\syscalls.c" lastModified="143b501514c">
       </source>
       <source file="..\..\..\cmsis_boot\stm32f4xx_conf.h" lastModified="1435c3b2fe1">
          <include file="..\..\..\cmsis_lib\include\stm32f4xx_flash.h"/>
@@ -118,6 +118,8 @@
          <include file="..\..\..\cmsis\core_cm4_simd.h"/>
       </source>
       <source file="..\..\..\cmsis_boot\system_stm32f4xx.h" lastModified="1435c3addda">
+      </source>
+      <source file="..\..\..\nrf24l01_registers.h" lastModified="148a83b42d1">
       </source>
       <source file="..\..\..\cmsis_boot\startup\startup_stm32f4xx.c" lastModified="1435c4980a8">
       </source>

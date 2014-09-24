@@ -4,6 +4,24 @@
 #include <stm32f4xx_spi.h>
 #include "FreeRTOS.h"
 #include "task.h"
+#include "nrf24l01_registers.h"
+
+//Chip Enable Activates RX or TX mode
+#define CE_H   GPIO_SetBits(GPIOD, GPIO_Pin_10)
+#define CE_L   GPIO_ResetBits(GPIOD, GPIO_Pin_10)
+
+//SPI Chip Select
+#define CSN_H  GPIO_SetBits(GPIOD, GPIO_Pin_9)
+#define CSN_L  GPIO_ResetBits(GPIOD, GPIO_Pin_9)
+
+uint8_t SPI2_send(uint8_t data){
+
+	SPI2->DR = data; // write data to be transmitted to the SPI data register
+	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
+	while( !(SPI2->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
+	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
+	return SPI2->DR; // return received data from SPI data register
+}
 
 void vLED(void *pvParameters) {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -31,23 +49,67 @@ void vLED(void *pvParameters) {
 	}
 }
 
-void Out_Data_SPI2(uint8_t SPI_Data)
-{
-	SPI_Cmd(SPI2, ENABLE);
-	SPI_SSOutputCmd(SPI2,DISABLE);
-	SPI_I2S_SendData(SPI2, SPI_Data);
-	SPI_SSOutputCmd(SPI2,ENABLE);
-	SPI_Cmd(SPI2, DISABLE);
+uint8_t nrf_read_reg(uint8_t reg){
+	CSN_L;
+	reg = SPI2_send(reg);
+	reg = SPI2_send(NOP);
+	CSN_H;
+	return reg; // return received data from SPI data register
 }
-uint8_t SPI2_send(uint8_t data){
+uint8_t nrf_write_reg(uint8_t reg, uint8_t data){
+	CSN_L;
+	reg = SPI2_send(reg | W_REGISTER);
+	reg = SPI2_send(data);
+	CSN_H;
+	return reg;
+}
+void nrf_send_byte(uint8_t byte){
+	CSN_L;
+	SPI2_send(W_TX_PAYLOAD);
+	SPI2_send(byte);
+	CE_L;
+	vTaskDelay(1);
+	CE_H;
+	CSN_H;
+}
+//void nrf_write(uint8_t reg, uint8_t data){
+//	GPIO_ResetBits(GPIOD, GPIO_Pin_9 | GPIO_Pin_10);
+//	SPI2->DR = reg; // write data to be transmitted to the SPI data register
+//	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
+//	while( !(SPI2->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
+//	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
+//	SPI2->DR = data; // write data to be transmitted to the SPI data register
+//	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
+//	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
+//	GPIO_SetBits(GPIOD, GPIO_Pin_9 | GPIO_Pin_10);
+//}
+//uint8_t nrf_send(uint8_t data){
+//	GPIO_ResetBits(GPIOD, GPIO_Pin_9 | GPIO_Pin_10);
+//	SPI2->DR = W_TX_PAYLOAD; // write data to be transmitted to the SPI data register
+//	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
+//	while( !(SPI2->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
+//	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
+//	SPI2->DR = data; // write data to be transmitted to the SPI data register
+//	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
+//	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
+//	GPIO_SetBits(GPIOD, GPIO_Pin_10);
+//	vTaskDelay(1);
+//	GPIO_ResetBits(GPIOD, GPIO_Pin_10);
+//	return nrf_read(STATUS, 0x00);
+//}
 
-	SPI2->DR = data; // write data to be transmitted to the SPI data register
-	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
-	while( !(SPI2->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
-	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
-	return SPI2->DR; // return received data from SPI data register
-}
 void vSPI(void *pvParameters) {
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10; // 9 - SCN, 10 - ~CE
+	GPIO_InitStructure.GPIO_Mode	= GPIO_Mode_OUT;
+	GPIO_InitStructure.GPIO_OType	= GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_Speed	= GPIO_Speed_100MHz;
+	GPIO_InitStructure.GPIO_PuPd	= GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOD, &GPIO_InitStructure);
+	CSN_L;
+	CE_L;
+
 	uint8_t SPI_Data = 0xFF;
 
 	/*------ ENABLE all the clocks and the SPI2-Interface ------*/
@@ -79,7 +141,7 @@ void vSPI(void *pvParameters) {
 	/*------ SPI init structure ------*/
 	SPI_I2S_DeInit(SPI2);
 	SPI_InitTypeDef SPI_InitTypeDefStruct;
-	SPI_InitTypeDefStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;
+	SPI_InitTypeDefStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;
 	SPI_InitTypeDefStruct.SPI_Direction		= SPI_Direction_2Lines_FullDuplex;
 	SPI_InitTypeDefStruct.SPI_Mode			= SPI_Mode_Master;
 	SPI_InitTypeDefStruct.SPI_DataSize		= SPI_DataSize_8b;
@@ -89,23 +151,20 @@ void vSPI(void *pvParameters) {
 	SPI_InitTypeDefStruct.SPI_CPHA			= SPI_CPHA_1Edge;
 	SPI_Init(SPI2, &SPI_InitTypeDefStruct);
 	SPI_Cmd(SPI2, ENABLE);
-//
-//	while(!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE));
-//	SPI_I2S_SendData(SPI2, 0x80);
-//	while(!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE));
-	//Out_Data_SPI2(0x05);
-	for (;;) {
-		//GPIO_ResetBits(GPIOE, GPIO_Pin_3);
-		//adress = 0x80 | adress;
 
-//		while(!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE)) {
-//			taskYIELD();
-//		};
-//		SPI_I2S_SendData(SPI2, adress);
-		SPI_Data = SPI2_send(0x00);
-		SPI_Data = SPI2_send(0x00);
-		SPI_Data = SPI2_send(0x00);
-		SPI_Data = SPI2_send(0x00);
+	nrf_write_reg(CONFIG, PWR_UP | EN_CRC);
+	nrf_write_reg(SETUP_RETR, 0x00);
+
+	for (;;) {
+		SPI_Data = nrf_read_reg(CONFIG);
+		SPI_Data = nrf_read_reg(EN_AA);
+		SPI_Data = nrf_read_reg(EN_RXADDR);
+		SPI_Data = nrf_read_reg(SETUP_AW);
+		SPI_Data = nrf_read_reg(SETUP_RETR);
+		SPI_Data = nrf_read_reg(RF_SETUP);
+		SPI_Data = nrf_read_reg(STATUS);
+		SPI_Data = nrf_read_reg(OBSERVE_TX);
+		nrf_send_byte(0xAA);
 //		SPI_Data = SPI_I2S_ReceiveData(SPI2); //Clear RXNE bit
 //		SPI_I2S_SendData(SPI2, SPI_Data);
 //		while(!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE)){
@@ -127,11 +186,11 @@ int main(void) {
 	return 0;
 }
 
-void SPI2_IRQHandler (void) {
-	if (SPI_I2S_GetFlagStatus(SPI2,SPI_I2S_FLAG_RXNE)==SET) {
-		// Прерывание вызвано приемом байта ?
-		uint8_t data = SPI2->DR; //Читаем то что пришло
-		GPIOC->ODR ^= (GPIO_Pin_9 | GPIO_Pin_8); //Инвертируем состояние светодиодов
-		//SPI2->DR = data; //И отправляем обратно то что приняли
-	}
-}
+//void SPI2_IRQHandler (void) {
+//	if (SPI_I2S_GetFlagStatus(SPI2,SPI_I2S_FLAG_RXNE)==SET) {
+//		// Прерывание вызвано приемом байта ?
+//		uint8_t data = SPI2->DR; //Читаем то что пришло
+//		GPIOC->ODR ^= (GPIO_Pin_9 | GPIO_Pin_8); //Инвертируем состояние светодиодов
+//		//SPI2->DR = data; //И отправляем обратно то что приняли
+//	}
+//}
