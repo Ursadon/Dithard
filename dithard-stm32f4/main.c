@@ -37,15 +37,15 @@ void vLED(void *pvParameters) {
 	for (;;) {
 		GPIO_SetBits(GPIOD, GPIO_Pin_12);
 		vTaskDelay(1000);
-		GPIO_SetBits(GPIOD, GPIO_Pin_13);
+		GPIO_ResetBits(GPIOD, GPIO_Pin_12);
 		vTaskDelay(1000);
-		GPIO_SetBits(GPIOD, GPIO_Pin_14);
-		vTaskDelay(1000);
-		GPIO_SetBits(GPIOD, GPIO_Pin_15);
-		vTaskDelay(1000);
-		GPIO_ResetBits(GPIOD,
-				GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
-		vTaskDelay(1000);
+//		GPIO_SetBits(GPIOD, GPIO_Pin_14);
+//		vTaskDelay(1000);
+//		GPIO_SetBits(GPIOD, GPIO_Pin_15);
+//		vTaskDelay(1000);
+//		GPIO_ResetBits(GPIOD,
+//				GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15);
+//		vTaskDelay(1000);
 	}
 }
 
@@ -56,12 +56,11 @@ uint8_t nrf_read_reg(uint8_t reg){
 	CSN_H;
 	return reg; // return received data from SPI data register
 }
-uint8_t nrf_write_reg(uint8_t reg, uint8_t data){
+void nrf_write_reg(uint8_t reg, uint8_t data){
 	CSN_L;
 	reg = SPI2_send(reg | W_REGISTER);
 	reg = SPI2_send(data);
 	CSN_H;
-	return reg;
 }
 void nrf_send_byte(uint8_t byte){
 	CSN_L;
@@ -72,31 +71,6 @@ void nrf_send_byte(uint8_t byte){
 	CE_H;
 	CSN_H;
 }
-//void nrf_write(uint8_t reg, uint8_t data){
-//	GPIO_ResetBits(GPIOD, GPIO_Pin_9 | GPIO_Pin_10);
-//	SPI2->DR = reg; // write data to be transmitted to the SPI data register
-//	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
-//	while( !(SPI2->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
-//	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
-//	SPI2->DR = data; // write data to be transmitted to the SPI data register
-//	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
-//	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
-//	GPIO_SetBits(GPIOD, GPIO_Pin_9 | GPIO_Pin_10);
-//}
-//uint8_t nrf_send(uint8_t data){
-//	GPIO_ResetBits(GPIOD, GPIO_Pin_9 | GPIO_Pin_10);
-//	SPI2->DR = W_TX_PAYLOAD; // write data to be transmitted to the SPI data register
-//	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
-//	while( !(SPI2->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
-//	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
-//	SPI2->DR = data; // write data to be transmitted to the SPI data register
-//	while( !(SPI2->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
-//	while( SPI2->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
-//	GPIO_SetBits(GPIOD, GPIO_Pin_10);
-//	vTaskDelay(1);
-//	GPIO_ResetBits(GPIOD, GPIO_Pin_10);
-//	return nrf_read(STATUS, 0x00);
-//}
 
 void vSPI(void *pvParameters) {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -110,7 +84,7 @@ void vSPI(void *pvParameters) {
 	CSN_L;
 	CE_L;
 
-	uint8_t SPI_Data = 0xFF;
+	uint8_t SPI_Data, rx_data = 0xFF;
 
 	/*------ ENABLE all the clocks and the SPI2-Interface ------*/
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
@@ -151,20 +125,35 @@ void vSPI(void *pvParameters) {
 	SPI_InitTypeDefStruct.SPI_CPHA			= SPI_CPHA_1Edge;
 	SPI_Init(SPI2, &SPI_InitTypeDefStruct);
 	SPI_Cmd(SPI2, ENABLE);
-
-	nrf_write_reg(CONFIG, PWR_UP | EN_CRC);
+	vTaskDelay(100);
+	nrf_write_reg(CONFIG, 0x0B);
 	nrf_write_reg(SETUP_RETR, 0x00);
-
+	nrf_write_reg(RX_PW_P0, 0x01);
+	nrf_write_reg(CONFIG, 0x0B);
 	for (;;) {
+		CE_H;
 		SPI_Data = nrf_read_reg(CONFIG);
+		SPI_Data = nrf_read_reg(RX_PW_P0);
+		SPI_Data = nrf_read_reg(CD);
 		SPI_Data = nrf_read_reg(EN_AA);
 		SPI_Data = nrf_read_reg(EN_RXADDR);
 		SPI_Data = nrf_read_reg(SETUP_AW);
 		SPI_Data = nrf_read_reg(SETUP_RETR);
 		SPI_Data = nrf_read_reg(RF_SETUP);
 		SPI_Data = nrf_read_reg(STATUS);
+		if ((SPI_Data & MASK_RX_DR) == MASK_RX_DR) {
+			rx_data = nrf_read_reg(R_RX_PAYLOAD);
+			if (rx_data == 0xAB) {
+				GPIO_SetBits(GPIOD, GPIO_Pin_14);
+			} else if (rx_data == 0xCC) {
+				GPIO_ResetBits(GPIOD, GPIO_Pin_14);
+			}
+			nrf_write_reg(STATUS,SPI_Data);
+			nrf_write_reg(STATUS,MASK_TX_DS);
+			nrf_write_reg(CONFIG,0x0B);
+		}
+		SPI_Data = nrf_read_reg(STATUS);
 		SPI_Data = nrf_read_reg(OBSERVE_TX);
-		nrf_send_byte(0xAA);
 //		SPI_Data = SPI_I2S_ReceiveData(SPI2); //Clear RXNE bit
 //		SPI_I2S_SendData(SPI2, SPI_Data);
 //		while(!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE)){

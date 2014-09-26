@@ -1,11 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dependencies>
-   <includePath signature="/I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\stm_lib\inc /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\cmsis /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\FreeRTOS\include /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\FreeRTOS /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\stm_lib /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100 /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\hd44780 /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\cmsis_boot">
+   <includePath signature="/I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\stm_lib\inc /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\cmsis /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\FreeRTOS\include /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\FreeRTOS /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\stm_lib /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100 /I..\..\..\..\..\Dropbox\Priv\Projects /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\hd44780 /I..\..\..\..\..\Dropbox\Priv\Projects\Dithard\dithard-stm32f100\cmsis_boot">
       <source file="..\..\..\cmsis\core_cm3.h" lastModified="1441c06ef48">
       </source>
       <source file="..\..\..\FreeRTOS\list.c" lastModified="13cf1c99328">
          <include file="..\..\..\FreeRTOS\include\FreeRTOS.h"/>
          <include file="..\..\..\FreeRTOS\include\list.h"/>
+      </source>
+      <source file="..\..\..\stm_lib\src\stm32f10x_spi.c" lastModified="148a8693e5a">
+         <include file="..\..\..\stm_lib\inc\stm32f10x_spi.h"/>
+         <include file="..\..\..\stm_lib\inc\stm32f10x_rcc.h"/>
       </source>
       <source file="..\..\..\FreeRTOS\include\portmacro.h" lastModified="13cf1c99710">
       </source>
@@ -51,6 +55,9 @@
       <source file="..\..\..\FreeRTOS\heap_2.c" lastModified="13cf1c9ba38">
          <include file="..\..\..\FreeRTOS\include\FreeRTOS.h"/>
          <include file="..\..\..\FreeRTOS\include\task.h"/>
+      </source>
+      <source file="..\..\..\stm_lib\inc\stm32f10x_spi.h" lastModified="148a8693e5a">
+         <include file="..\..\..\cmsis_boot\stm32f10x.h"/>
       </source>
       <source file="..\..\..\stm_lib\inc\stm32f10x_flash.h" lastModified="1441c0a2ceb">
          <include file="..\..\..\cmsis_boot\stm32f10x.h"/>

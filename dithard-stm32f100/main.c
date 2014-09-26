@@ -3,11 +3,136 @@
 #include <stm32f10x_gpio.h>
 #include <stm32f10x_flash.h>
 #include <stm32f10x_usart.h>
+#include <stm32f10x_spi.h>
 #include <string.h> /* memset */
 #include "hd44780\hd44780_driver.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "nrf24l01_registers.h"
 
+//Chip Enable Activates RX or TX mode
+#define CE_H   GPIO_SetBits(GPIOC, GPIO_Pin_5)
+#define CE_L   GPIO_ResetBits(GPIOC, GPIO_Pin_5)
+
+//SPI Chip Select
+#define CSN_H  GPIO_SetBits(GPIOC, GPIO_Pin_4)
+#define CSN_L  GPIO_ResetBits(GPIOC, GPIO_Pin_4)
+
+uint8_t SPI1_send(uint8_t data){
+
+	SPI1->DR = data; // write data to be transmitted to the SPI data register
+	while( !(SPI1->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
+	while( !(SPI1->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
+	while( SPI1->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
+	return SPI1->DR; // return received data from SPI data register
+}
+
+uint8_t nrf_read_reg(uint8_t reg){
+	CSN_L;
+	reg = SPI1_send(reg);
+	reg = SPI1_send(NOP);
+	CSN_H;
+	return reg; // return received data from SPI data register
+}
+void nrf_write_reg(uint8_t reg, uint8_t data){
+	CSN_L;
+	reg = SPI1_send(reg | W_REGISTER);
+	reg = SPI1_send(data);
+	CSN_H;
+}
+void nrf_send_byte(uint8_t byte){
+	CSN_L;
+	SPI1_send(W_TX_PAYLOAD);
+	SPI1_send(byte);
+	CE_L;
+	vTaskDelay(1);
+	CE_H;
+	CSN_H;
+}
+void vSPI(void *pvParameters) {
+	// Configure BLUE Botton (B1 User - PA0) on STM32 Discovery board - Input Floatting
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Mode	= GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed	= GPIO_Speed_50MHz;
+	GPIO_Init(GPIOC, &GPIO_InitStructure);
+	CSN_L;
+	CE_L;
+
+	uint8_t SPI_Data = 0xFF, last_state = 0;
+
+	/*------ ENABLE all the clocks and the SPI2-Interface ------*/
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+
+	/*-------- Configuring SCK, MISO, MOSI --------*/
+	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitStruct.GPIO_Pin	= GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
+	GPIO_InitStruct.GPIO_Mode	= GPIO_Mode_AF_PP;
+	GPIO_InitStruct.GPIO_Speed	= GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStruct);
+//
+//	GPIO_InitStruct.GPIO_Pin	= GPIO_Pin_12;
+//	GPIO_InitStruct.GPIO_Mode	= GPIO_Mode_AF;
+//	GPIO_InitStruct.GPIO_Speed	= GPIO_Speed_50MHz;
+//	GPIO_InitStruct.GPIO_OType	= GPIO_OType_PP;
+//	GPIO_InitStruct.GPIO_PuPd	= GPIO_PuPd_NOPULL;
+//	GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	/*------ SPI init structure ------*/
+	SPI_I2S_DeInit(SPI1);
+	SPI_InitTypeDef SPI_InitTypeDefStruct;
+	SPI_InitTypeDefStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;
+	SPI_InitTypeDefStruct.SPI_Direction		= SPI_Direction_2Lines_FullDuplex;
+	SPI_InitTypeDefStruct.SPI_Mode			= SPI_Mode_Master;
+	SPI_InitTypeDefStruct.SPI_DataSize		= SPI_DataSize_8b;
+	SPI_InitTypeDefStruct.SPI_NSS			= SPI_NSS_Soft | SPI_NSSInternalSoft_Set;
+	SPI_InitTypeDefStruct.SPI_FirstBit		= SPI_FirstBit_MSB;
+	SPI_InitTypeDefStruct.SPI_CPOL			= SPI_CPOL_Low;
+	SPI_InitTypeDefStruct.SPI_CPHA			= SPI_CPHA_1Edge;
+	SPI_Init(SPI1, &SPI_InitTypeDefStruct);
+	SPI_Cmd(SPI1, ENABLE);
+
+	nrf_write_reg(CONFIG, PWR_UP | EN_CRC);
+	nrf_write_reg(SETUP_RETR, 0x00);
+
+	for (;;) {
+		nrf_write_reg(CONFIG, PWR_UP | EN_CRC);
+		SPI_Data = nrf_read_reg(CONFIG);
+		SPI_Data = nrf_read_reg(EN_AA);
+		SPI_Data = nrf_read_reg(EN_RXADDR);
+		SPI_Data = nrf_read_reg(SETUP_AW);
+		SPI_Data = nrf_read_reg(SETUP_RETR);
+		SPI_Data = nrf_read_reg(RF_SETUP);
+		SPI_Data = nrf_read_reg(STATUS);
+		SPI_Data = nrf_read_reg(OBSERVE_TX);
+		if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) && last_state == 0) {
+			last_state = 1;
+			nrf_send_byte(0xAB);
+			GPIO_SetBits(GPIOC, GPIO_Pin_9);
+		}
+		if (!GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) && (last_state == 1)) {
+			last_state = 0;
+			nrf_send_byte(0xCC);
+			GPIO_ResetBits(GPIOC, GPIO_Pin_9);
+		}
+
+//		SPI_Data = SPI_I2S_ReceiveData(SPI2); //Clear RXNE bit
+//		SPI_I2S_SendData(SPI2, SPI_Data);
+//		while(!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE)){
+//			taskYIELD();
+//		};
+
+		//return  SPI_I2S_ReceiveData(SPI2);
+
+	}
+}
 // WAKE test string "0xC0, 0xC9, 0x02, 0x08, 0x73, 0x65, 0x6E, 0x64, 0x64, 0x61, 0x74, 0x61, 0xF0"
 enum wake_packet {
 	header = 0, address, command, num_bytes, data, crc
@@ -301,13 +426,9 @@ void vLed(void *pvParameters) {
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 	for (;;) {
 		GPIO_SetBits(GPIOC, GPIO_Pin_8);
-		vTaskDelay(10000);
-		GPIO_SetBits(GPIOC, GPIO_Pin_9);
-		vTaskDelay(10000);
+		vTaskDelay(5000);
 		GPIO_ResetBits(GPIOC, GPIO_Pin_8);
-		vTaskDelay(10000);
-		GPIO_ResetBits(GPIOC, GPIO_Pin_9);
-		vTaskDelay(10000);
+		vTaskDelay(5000);
 	}
 }
 void vRange(void *pvParameters) {
@@ -427,14 +548,16 @@ int main(void)
 	SetSysClockTo24();
 	xTaskCreate( vLed, ( signed char * ) "vLed",
 			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	xTaskCreate( vDrive, ( signed char * ) "vDrive",
+	xTaskCreate( vSPI, ( signed char * ) "vSPI",
 			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	xTaskCreate( vScanUsart, ( signed char * ) "vScanUsart",
-			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	//xTaskCreate( vRange, ( signed char * ) "vRange",
-	//		configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
-	xTaskCreate( vLCD, ( signed char * ) "vLCD",
-			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+//	xTaskCreate( vDrive, ( signed char * ) "vDrive",
+//			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+//	xTaskCreate( vScanUsart, ( signed char * ) "vScanUsart",
+//			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+//	//xTaskCreate( vRange, ( signed char * ) "vRange",
+//	//		configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
+//	xTaskCreate( vLCD, ( signed char * ) "vLCD",
+//			configMINIMAL_STACK_SIZE, NULL, 0, ( xTaskHandle * ) NULL);
 	vTaskStartScheduler();
 	return 0;
 }

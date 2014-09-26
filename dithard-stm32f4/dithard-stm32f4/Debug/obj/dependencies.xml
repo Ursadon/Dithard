@@ -119,7 +119,7 @@
       </source>
       <source file="..\..\..\cmsis_boot\system_stm32f4xx.h" lastModified="1435c3addda">
       </source>
-      <source file="..\..\..\nrf24l01_registers.h" lastModified="148a83b42d1">
+      <source file="..\..\..\nrf24l01_registers.h" lastModified="148a8556265">
       </source>
       <source file="..\..\..\cmsis_boot\startup\startup_stm32f4xx.c" lastModified="1435c4980a8">
       </source>

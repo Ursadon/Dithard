@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
    <processor signature="arm-none-eabi-gcc -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wall -g -nostartfiles -Map=dithard-stm32f4.map -O0 --gc-sections -LF:\dev\CoIDE\configuration\ProgramData\dithard-stm32f4 -TF:\dev\CoIDE\configuration\ProgramData\dithard-stm32f4/arm-gcc-link.ld -g">
-      <target file="dithard-stm32f4.elf" lastModified="148a854dff6">
+      <target file="dithard-stm32f4.elf" lastModified="148ad1a1bfb">
          <source file="..\obj\startup_stm32f4xx.o" lastModified="148a831acc9"/>
-         <source file="..\obj\main.o" lastModified="148a854de40"/>
+         <source file="..\obj\main.o" lastModified="148ad1a1a45"/>
          <source file="..\obj\stm32f4xx_rcc.o" lastModified="148a831ad4d"/>
          <source file="..\obj\timers.o" lastModified="148a831ad72"/>
          <source file="..\obj\tasks.o" lastModified="148a831adc0"/>
