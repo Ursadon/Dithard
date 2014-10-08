@@ -13,21 +13,31 @@
 <part id="0"/>
 <part id="1"/>
 <part id="2"/>
+<part id="3"/>
+<part id="4"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="F:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/main.c" title="main.c" tooltip="F:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/main.c" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="E:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/main.c" title="main.c" tooltip="E:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/dithard-stm32f4/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5206" selectionTopPixel="2134"/>
+<editorState selectionHorizontalPixel="0" selectionLength="12" selectionOffset="12772" selectionTopPixel="2858"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" partName="startup_stm32f4xx.c" path="F:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c" title="startup_stm32f4xx.c" tooltip="F:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="14793" selectionTopPixel="4335"/>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="microrl.c" partName="microrl.c" path="E:/Dropbox/Priv/Projects/microrl/src/microrl.c" title="microrl.c" tooltip="E:/Dropbox/Priv/Projects/microrl/src/microrl.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/dithard-stm32f4/microrl/microrl.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="9293" selectionTopPixel="5321"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="nrf24l01_registers.h" partName="nrf24l01_registers.h" path="F:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/nrf24l01_registers.h" title="nrf24l01_registers.h" tooltip="F:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/nrf24l01_registers.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/dithard-stm32f4/nrf24l01_registers.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="10" selectionOffset="1954" selectionTopPixel="571"/>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="microrl.h" partName="microrl.h" path="E:/Dropbox/Priv/Projects/microrl/src/microrl.h" title="microrl.h" tooltip="E:/Dropbox/Priv/Projects/microrl/src/microrl.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/dithard-stm32f4/microrl/microrl.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3478" selectionTopPixel="1367"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="config.h" partName="config.h" path="E:/Dropbox/Priv/Projects/microrl/src/config.h" title="config.h" tooltip="E:/Dropbox/Priv/Projects/microrl/src/config.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/dithard-stm32f4/microrl/config.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="19" selectionOffset="3301" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="printf.c" partName="printf.c" path="E:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/stdio/printf.c" title="printf.c" tooltip="E:/Dropbox/Priv/Projects/Dithard/dithard-stm32f4/stdio/printf.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/dithard-stm32f4/stdio/printf.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="26" selectionOffset="10999" selectionTopPixel="7718"/>
 </editor>
 </editors>
 <views>
@@ -35,10 +45,9 @@
 <viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="0">
 <expanded>
 <element path="/dithard-stm32f4"/>
-<element path="/dithard-stm32f4/cmsis"/>
-<element path="/dithard-stm32f4/cmsis_lib"/>
-<element path="/dithard-stm32f4/cmsis_lib/include"/>
-<element path="/dithard-stm32f4/cmsis_lib/source"/>
+<element path="/dithard-stm32f4/microrl"/>
+<element path="/dithard-stm32f4/stdio"/>
+<element path="/dithard-stm32f4/syscalls"/>
 </expanded>
 <selection>
 <element path="/dithard-stm32f4/main.c"/>
@@ -56,6 +65,11 @@
 </view>
 <view id="org.eclipse.ui.console.ConsoleView" partName="Console">
 <viewState/>
+</view>
+<view id="org.eclipse.cdt.debug.ui.memory.memorybrowser.MemoryBrowser" partName="Memory Browser">
+<viewState>
+<MemoryBroser ComboItemsValue="0x20001aa4;" FocuseTabIndex="0" TabsValue="" TextValue="0x20001aa4" horizontalPosition="0" verticalPosition="0"/>
+</viewState>
 </view>
 <view id="org.eclipse.debug.ui.VariableView" partName="Variables">
 <viewState/>
@@ -200,6 +214,7 @@
 <view id="org.eclipse.ui.console.ConsoleView"/>
 <view id="org.eclipse.debug.ui.DebugView"/>
 <view id="org.coocox.codebugger.trace.ui.traceview"/>
+<view id="org.eclipse.cdt.debug.ui.memory.memorybrowser.MemoryBrowser"/>
 <view id="org.coocox.builder.ui.views.ProjectView"/>
 <view id="org.eclipse.debug.ui.VariableView"/>
 <fastViewBars/>
@@ -232,21 +247,22 @@
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@1b36583" ratio="0.5" ratioLeft="956" ratioRight="956" relationship="2" relative="org.eclipse.ui.internal.ViewStack@ae5cdb">
-<folder activePageID="org.coocox.codebugger.trace.ui.traceview" appearance="2" expanded="2">
+<folder activePageID="org.eclipse.cdt.debug.ui.memory.memorybrowser.MemoryBrowser" appearance="2" expanded="2">
 <page content="org.coocox.codebugger.trace.ui.traceview" label="Semihosting"/>
+<page content="org.eclipse.cdt.debug.ui.memory.memorybrowser.MemoryBrowser" label="Memory Browser"/>
 <page content="org.eclipse.debug.ui.ExpressionView" label="LabelNotFound"/>
 <page content="org.eclipse.debug.ui.MemoryView" label="LabelNotFound"/>
-<page content="org.eclipse.cdt.debug.ui.memory.memorybrowser.MemoryBrowser" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
+<part id="1"/>
 </presentation>
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@1d2abf5" ratio="0.75" ratioLeft="1434" ratioRight="478" relationship="2" relative="org.eclipse.ui.internal.ViewStack@177f7b">
 <folder appearance="2" expanded="2">
+<page content="org.eclipse.debug.ui.RegisterView" label="LabelNotFound"/>
 <page content="org.eclipse.cdt.dsf.debug.ui.disassembly.view" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
-<page content="org.eclipse.debug.ui.RegisterView" label="LabelNotFound"/>
 <page content="org.coocox.coassistant.view.CoAssistantView_debug" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
@@ -268,158 +284,161 @@
 <navigationHistory>
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/dithard-stm32f4/main.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/dithard-stm32f4/nrf24l01_registers.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/dithard-stm32f4/microrl/microrl.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/dithard-stm32f4/microrl/microrl.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/dithard-stm32f4/microrl/config.h"/>
+<editor factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="E:\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\microrl\microrl.h" project="dithard-stm32f4"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/dithard-stm32f4/stdio/printf.c"/>
 </editors>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4771" y="0"/>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="8794" y="12"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="config.h" index="3">
+<position info="not_deleted" x="3300" y="0"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4810" y="0"/>
+<position info="not_deleted" x="12772" y="12"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="8794" y="12"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4848" y="0"/>
+<position info="not_deleted" x="12772" y="12"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="0" y="0"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4888" y="0"/>
+<position info="not_deleted" x="11200" y="13"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="config.h" index="3">
+<position info="not_deleted" x="3301" y="19"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="8794" y="12"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9325" y="12"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="6009" y="10"/>
+</item>
+<item historyLabel="microrl.h" index="4">
+<position info="not_deleted" x="2888" y="10"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="6009" y="10"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4926" y="0"/>
+<position info="not_deleted" x="11200" y="13"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4962" y="0"/>
+<position info="not_deleted" x="9212" y="0"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5010" y="0"/>
+<position info="not_deleted" x="12772" y="12"/>
 </item>
-<item historyLabel="startup_stm32f4xx.c" index="1">
-<position info="not_deleted" x="14793" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5650" y="0"/>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="8794" y="12"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5935" y="0"/>
+<position info="not_deleted" x="12796" y="0"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="3607" y="0"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position/>
+<position info="not_deleted" x="12772" y="12"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9294" y="0"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="3581" y="26"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5208" y="0"/>
+<position info="not_deleted" x="1442" y="0"/>
+</item>
+<item historyLabel="printf.c" index="5">
+<position info="not_deleted" x="1020" y="0"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="5950" y="5"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5282" y="0"/>
+<position info="not_deleted" x="12772" y="12"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="8794" y="12"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9248" y="0"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9271" y="25"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="3581" y="26"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9271" y="25"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="3581" y="26"/>
+</item>
+<item historyLabel="config.h" index="3">
+<position info="not_deleted" x="3301" y="19"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9847" y="0"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5319" y="0"/>
+<position info="not_deleted" x="952" y="9"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="3482" y="9"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9279" y="5"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="3328" y="5"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9279" y="5"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5355" y="0"/>
+<position info="not_deleted" x="8585" y="6"/>
+</item>
+<item historyLabel="printf.c" index="5">
+<position info="not_deleted" x="10999" y="26"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9279" y="5"/>
+</item>
+<item historyLabel="microrl.h" index="2">
+<position info="not_deleted" x="3478" y="0"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9293" y="0"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5393" y="0"/>
+<position info="not_deleted" x="8841" y="10"/>
+</item>
+<item historyLabel="microrl.c" index="1">
+<position info="not_deleted" x="9293" y="0"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5625" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4630" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4639" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4675" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4713" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4745" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4780" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4819" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4857" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4897" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4935" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4971" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5208" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5282" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5319" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5355" y="0"/>
-</item>
-<item historyLabel="nrf24l01_registers.h" index="2">
-<position info="not_deleted" x="1928" y="10"/>
-</item>
-<item historyLabel="nrf24l01_registers.h" index="2">
-<position info="not_deleted" x="1954" y="10"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5278" y="0"/>
-</item>
-<item historyLabel="startup_stm32f4xx.c" index="1">
-<position info="not_deleted" x="14793" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5650" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5208" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5244" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5282" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5319" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5355" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5393" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="5625" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4630" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4639" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4675" y="0"/>
+<position info="not_deleted" x="8841" y="10"/>
 </item>
 <item active="true" historyLabel="main.c" index="0">
-<position info="not_deleted" x="4713" y="0"/>
+<position/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -428,52 +447,48 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="nrf24l01_registers.h" tooltip="dithard-stm32f4/nrf24l01_registers.h">
-<persistable path="/dithard-stm32f4/nrf24l01_registers.h"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="printf.c" tooltip="dithard-stm32f4/stdio/printf.c">
+<persistable path="/dithard-stm32f4/stdio/printf.c"/>
+</file>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="microrl.h" tooltip="E:\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\microrl\microrl.h">
+<persistable path="E:\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\microrl\microrl.h" project="dithard-stm32f4"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="config.h" tooltip="dithard-stm32f4/microrl/config.h">
+<persistable path="/dithard-stm32f4/microrl/config.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="microrl.h" tooltip="dithard-stm32f4/microrl/microrl.h">
+<persistable path="/dithard-stm32f4/microrl/microrl.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="microrl.c" tooltip="dithard-stm32f4/microrl/microrl.c">
+<persistable path="/dithard-stm32f4/microrl/microrl.c"/>
+</file>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stdlib.h" tooltip="E:\dev\gcc-arm\4.8-2014q2\arm-none-eabi\include\stdlib.h">
+<persistable path="E:\dev\gcc-arm\4.8-2014q2\arm-none-eabi\include\stdlib.h" project="dithard-stm32f4"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="dithard-stm32f4/main.c">
+<persistable path="/dithard-stm32f4/main.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="syscalls.c" tooltip="dithard-stm32f4/syscalls/syscalls.c">
+<persistable path="/dithard-stm32f4/syscalls/syscalls.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="tasks.c" tooltip="dithard-stm32f4/FreeRTOS-CM4/tasks.c">
 <persistable path="/dithard-stm32f4/FreeRTOS-CM4/tasks.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="heap_2.c" tooltip="dithard-stm32f4/FreeRTOS-CM4/heap_2.c">
-<persistable path="/dithard-stm32f4/FreeRTOS-CM4/heap_2.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" tooltip="dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c">
+<persistable path="/dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="portable.h" tooltip="dithard-stm32f4/FreeRTOS-CM4/include/portable.h">
-<persistable path="/dithard-stm32f4/FreeRTOS-CM4/include/portable.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" tooltip="dithard-stm32f4/FreeRTOS-CM4/include/FreeRTOSConfig.h">
-<persistable path="/dithard-stm32f4/FreeRTOS-CM4/include/FreeRTOSConfig.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="portmacro.h" tooltip="dithard-stm32f4/FreeRTOS-CM4/include/portmacro.h">
-<persistable path="/dithard-stm32f4/FreeRTOS-CM4/include/portmacro.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="port.c" tooltip="dithard-stm32f4/FreeRTOS-CM4/port.c">
-<persistable path="/dithard-stm32f4/FreeRTOS-CM4/port.c"/>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="config.h" tooltip="E:\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\microrl\config.h">
+<persistable path="E:\Dropbox\Priv\Projects\Dithard\dithard-stm32f4\microrl\config.h" project="dithard-stm32f4"/>
 </file>
 <file factoryID="org.coocox.component.ui.editors.repository.RepositoryElementFactory" id="org.coocox.builder.ui.editors.repository.RepositoryBrowser" name="Repository" tooltip="Repository">
 <persistable>&#x0A;<subPage/>
 </persistable>
 </file>
-<file factoryID="org.coocox.component.ui.editors.repository.RepositoryElementFactory" id="org.coocox.builder.ui.editors.repository.RepositoryBrowser" name="Repository" tooltip="Repository">
-<persistable>&#x0A;<subPage horizontalPosition="0" selectedItemId="509" subPageIndex="2" verticalPosition="0"/>
-</persistable>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="KWP.h" tooltip="NPX-Tool/KWP.h">
-<persistable path="/NPX-Tool/KWP.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f10x_usart.c" tooltip="NPX-Tool/stm_lib/src/stm32f10x_usart.c">
-<persistable path="/NPX-Tool/stm_lib/src/stm32f10x_usart.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="KWP.c" tooltip="NPX-Tool/KWP.c">
-<persistable path="/NPX-Tool/KWP.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" tooltip="dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c">
-<persistable path="/dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="dithard-stm32f100/main.c">
+<persistable path="/dithard-stm32f100/main.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="nrf24l01_registers.h" tooltip="dithard-stm32f4/nrf24l01_registers.h">
 <persistable path="/dithard-stm32f4/nrf24l01_registers.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" tooltip="dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c">
-<persistable path="/dithard-stm32f4/cmsis_boot/startup/startup_stm32f4xx.c"/>
 </file>
 </mruList>
 </workbench>

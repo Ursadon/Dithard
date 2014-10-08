@@ -1,10 +1,10 @@
 Archive member included because of file (symbol)
 
-f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
                               ..\obj\queue.o (memcpy)
-f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
                               ..\obj\main.o (memset)
-f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
+e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
                               ..\obj\tasks.o (strncpy)
 
 Discarded input sections
@@ -478,17 +478,17 @@ Discarded input sections
                 0x00000000       0x18 ..\obj\heap_2.o
  .text.vPortInitialiseBlocks
                 0x00000000        0xc ..\obj\heap_2.o
- .text          0x00000000       0xec f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
- .data          0x00000000        0x0 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
- .bss           0x00000000        0x0 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+ .text          0x00000000       0xec e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+ .data          0x00000000        0x0 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+ .bss           0x00000000        0x0 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
  .ARM.attributes
-                0x00000000       0x1b f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
- .text          0x00000000        0x0 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
- .data          0x00000000        0x0 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
- .bss           0x00000000        0x0 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
- .text          0x00000000        0x0 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
- .data          0x00000000        0x0 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
- .bss           0x00000000        0x0 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
+                0x00000000       0x1b e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memcpy.o)
+ .text          0x00000000        0x0 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+ .data          0x00000000        0x0 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+ .bss           0x00000000        0x0 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+ .text          0x00000000        0x0 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
+ .data          0x00000000        0x0 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
+ .bss           0x00000000        0x0 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
 
 Memory Configuration
 
@@ -746,9 +746,9 @@ Linker script and memory map
                 0x080018b8                vPortFree
  .text.prvHeapInit
                 0x08001928       0x50 ..\obj\heap_2.o
- .text.memset   0x08001978       0x94 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+ .text.memset   0x08001978       0x94 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
                 0x08001978                memset
- .text.strncpy  0x08001a0c       0x64 f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
+ .text.strncpy  0x08001a0c       0x64 e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
                 0x08001a0c                strncpy
  *(.init)
  *(.fini)
@@ -878,9 +878,9 @@ LOAD ..\obj\croutine.o
 LOAD ..\obj\stm32f10x_spi.o
 LOAD ..\obj\heap_2.o
 START GROUP
-LOAD f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/armv7-m\libgcc.a
-LOAD f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a
-LOAD f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libc.a
+LOAD e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/armv7-m\libgcc.a
+LOAD e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a
+LOAD e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libc.a
 END GROUP
 OUTPUT(dithard-stm32f100.elf elf32-littlearm)
 
@@ -1023,9 +1023,9 @@ OUTPUT(dithard-stm32f100.elf elf32-littlearm)
  .ARM.attributes
                 0x000001fe       0x33 ..\obj\heap_2.o
  .ARM.attributes
-                0x00000231       0x2d f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+                0x00000231       0x2d e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
  .ARM.attributes
-                0x0000025e       0x2d f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
+                0x0000025e       0x2d e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
 
 .debug_frame    0x00000000     0x13c0
  .debug_frame   0x00000000       0x48 ..\obj\startup_stm32f10x_md_vl.o
@@ -1039,5 +1039,5 @@ OUTPUT(dithard-stm32f100.elf elf32-littlearm)
  .debug_frame   0x00000efc      0x134 ..\obj\port.o
  .debug_frame   0x00001030      0x29c ..\obj\stm32f10x_spi.o
  .debug_frame   0x000012cc       0x9c ..\obj\heap_2.o
- .debug_frame   0x00001368       0x2c f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
- .debug_frame   0x00001394       0x2c f:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)
+ .debug_frame   0x00001368       0x2c e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-memset.o)
+ .debug_frame   0x00001394       0x2c e:/dev/gcc-arm/4.8-2014q2/bin/../lib/gcc/arm-none-eabi/4.8.4/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strncpy.o)

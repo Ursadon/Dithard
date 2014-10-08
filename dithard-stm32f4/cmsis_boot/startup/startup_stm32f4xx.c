@@ -407,12 +407,11 @@ void Default_Reset_Handler(void)
   * @param  None
   * @retval None
   */
-static void Default_Handler(void)
+static void Default_Handler()
 {
 	/* Go into an infinite loop. */
 	while (1)
 	{
 	}
 }
-
 /*********************** (C) COPYRIGHT 2009 Coocox ************END OF FILE*****/

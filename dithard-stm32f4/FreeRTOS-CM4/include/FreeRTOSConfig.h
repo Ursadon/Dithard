@@ -1,9 +1,12 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+#include <stm32f4xx.h>
+
+/* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
+standard names. */
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
-#define vPortSVCHandler SVC_Handler
 #define xPortSysTickHandler SysTick_Handler
 
 #define configUSE_PREEMPTION            1
@@ -43,23 +46,39 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay                              1
 #define INCLUDE_uxTaskGetStackHighWaterMark 0
 
-/* This is the raw value as per the Cortex-M3 NVIC.  Values can be 255
-(lowest) to 0 (1?) (highest). */
-#define configKERNEL_INTERRUPT_PRIORITY                 255
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    191 /* equivalent to 0xb0, or priority 11. */
+/* The lowest interrupt priority that can be used in a call to a "set priority"
+function. */
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0xf
+
+/* The highest interrupt priority that can be used by any interrupt service
+routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
+INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
+PRIORITY THAN THIS! (higher priorities are lower numeric values. */
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5
+
+/* Cortex-M specific definitions. */
+#ifdef __NVIC_PRIO_BITS
+	/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
+	#define configPRIO_BITS       		__NVIC_PRIO_BITS
+#else
+	#define configPRIO_BITS       		4        /* 15 priority levels */
+#endif
+
+
+/* Interrupt priorities used by the kernel port layer itself.  These are generic
+to all Cortex-M ports, and do not rely on any particular library functions. */
+#define configKERNEL_INTERRUPT_PRIORITY 		( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
+See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 
 /* This is the value being used as per the ST library which permits 16
 priority values, 0 to 15.  This must correspond to the
 configKERNEL_INTERRUPT_PRIORITY setting.  Here 15 corresponds to the lowest
 NVIC value of 255. */
 #define configLIBRARY_KERNEL_INTERRUPT_PRIORITY 15
-
-/*-----------------------------------------------------------
- * UART configuration.
- *-----------------------------------------------------------*/
-#define configCOM0_RX_BUFFER_LENGTH             128
-#define configCOM0_TX_BUFFER_LENGTH             128
-#define configCOM1_RX_BUFFER_LENGTH             128
-#define configCOM1_TX_BUFFER_LENGTH             128
+/* Normal assert() semantics without relying on the provision of an assert.h
+header file. */
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
 
 #endif /* FREERTOS_CONFIG_H */
