@@ -1,9 +1,13 @@
 #include "console.h"
-
+#include "rs232.h"
 Console::Console(QObject *parent) :
     QThread(parent)
 {
-
+    qDebug() << "Console thread started" << endl;
+    wp = new Wakeproto();
+    rs232thread = new RS232();
+    connect(wp,SIGNAL(packetReceived(QByteArray)),this,SLOT(packet_rcvd(QByteArray)));
+    connect(rs232thread, SIGNAL(wakepacket_sn(const QByteArray &)), SLOT(wakepacket(const QByteArray &)));
 }
 
 Console::~Console(){
@@ -61,4 +65,15 @@ void Console::run()
         }
         qtout << "> " << flush;
     }
+}
+
+void Console::wakepacket(const QByteArray &packet)
+{
+    rx_packet = packet;
+    wp->dump_packet(rx_packet);
+}
+void Console::packet_rcvd(QByteArray packet) {
+    qDebug() << "[CONSOLE][INFO]: Packet received!" << endl;
+    //wp->dump_packet(packet);
+    //emit wakepacket(packet);
 }

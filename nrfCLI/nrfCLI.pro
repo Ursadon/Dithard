@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core
+QT       += core serialport
 
 QT       -= gui
 
@@ -16,7 +16,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    console.cpp
+    console.cpp \
+    rs232.cpp
 
 HEADERS += \
-    console.h
+    console.h \
+    rs232.h
+
+CONFIG(debug, debug|release) {
+        LIBS += -L$$PWD/../../libwakeproto/src/debug/ -lwakeproto
+} else {
+        LIBS += -L$$PWD/../../libwakeproto/src/release/ -lwakeproto
+}
+INCLUDEPATH += $$PWD/../../libwakeproto/src/
+DEPENDPATH += $$PWD/../../libwakeproto/src/
