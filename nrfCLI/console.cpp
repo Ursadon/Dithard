@@ -7,7 +7,6 @@ Console::Console(QObject *parent) :
     wp = new Wakeproto();
     rs232thread = new RS232();
     connect(wp,SIGNAL(packetReceived(QByteArray)),this,SLOT(packet_rcvd(QByteArray)));
-    connect(rs232thread, SIGNAL(wakepacket_sn(const QByteArray &)), SLOT(wakepacket(const QByteArray &)));
 }
 
 Console::~Console(){
@@ -24,7 +23,6 @@ void Console::run()
     QStringList command;
     int i = 0;
     qtout << "> " << flush;
-
     while(true) {
 
         line = qtin.readLine();
@@ -67,8 +65,9 @@ void Console::run()
     }
 }
 
-void Console::wakepacket(const QByteArray &packet)
+void Console::wakepacket_st(const QByteArray &packet)
 {
+    qDebug() << "[CONSOLE][INFO]: Packet received!" << endl;
     rx_packet = packet;
     wp->dump_packet(rx_packet);
 }

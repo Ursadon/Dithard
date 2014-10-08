@@ -16,11 +16,11 @@ public:
     explicit RS232(QObject *parent = 0);
     ~RS232();
 signals:
-    void wakepacket_sn(const QByteArray packet);
+    void new_wake_packet(const QByteArray packet);
 
 private:
     Wakeproto *wp;
-    QSerialPort serial;
+    QSerialPort *serial;
 public slots:
 
 private slots:

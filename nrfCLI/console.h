@@ -22,11 +22,11 @@ private:
 signals:
 
 public slots:
-
+void wakepacket_st(const QByteArray &packet);
 protected:
     void run();
 private slots:
-        void wakepacket(const QByteArray &packet);
+
         void packet_rcvd(QByteArray packet);
 };
 

@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 
     Console *wThread = new Console();
     RS232 *sThread = new RS232();
+    QObject::connect(sThread, SIGNAL(new_wake_packet(const QByteArray &)), wThread, SLOT(wakepacket_st(const QByteArray &)));
     wThread->start();
     sThread->start();
     return a.exec();
