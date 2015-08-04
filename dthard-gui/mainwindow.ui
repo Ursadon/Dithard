@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>350</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,13 +22,13 @@
   <property name="minimumSize">
    <size>
     <width>400</width>
-    <height>300</height>
+    <height>350</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>400</width>
-    <height>300</height>
+    <height>350</height>
    </size>
   </property>
   <property name="font">
@@ -90,7 +90,7 @@ background: #eeeeee;
     <property name="geometry">
      <rect>
       <x>240</x>
-      <y>130</y>
+      <y>180</y>
       <width>151</width>
       <height>161</height>
      </rect>
@@ -270,53 +270,12 @@ background: #eeeeee;
      <number>0</number>
     </property>
    </widget>
-   <widget class="QComboBox" name="comPortList">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>270</y>
-      <width>101</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="focusPolicy">
-     <enum>Qt::NoFocus</enum>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="currentText">
-     <string comment="Выберите порт" extracomment="Выберите порт"/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pbComPortOpen">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>270</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="focusPolicy">
-     <enum>Qt::NoFocus</enum>
-    </property>
-    <property name="contextMenuPolicy">
-     <enum>Qt::NoContextMenu</enum>
-    </property>
-    <property name="text">
-     <string>Open</string>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QTableWidget" name="tableStatus">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>231</width>
+      <width>232</width>
       <height>161</height>
      </rect>
     </property>
@@ -508,6 +467,99 @@ background: #eeeeee;
      <string>Disable TX Queue</string>
     </property>
    </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>219</y>
+      <width>211</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Связь</string>
+    </property>
+    <widget class="QWidget" name="gridLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>9</x>
+       <y>9</y>
+       <width>191</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="3" column="1">
+       <widget class="QPushButton" name="pbComPortOpen">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::NoContextMenu</enum>
+        </property>
+        <property name="text">
+         <string>Open</string>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="rbIP">
+        <property name="text">
+         <string>IP</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">buttonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLineEdit" name="leIPaddress"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QComboBox" name="comPortList">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="currentText">
+         <string comment="Выберите порт" extracomment="Выберите порт"/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QRadioButton" name="rbSerial">
+        <property name="text">
+         <string>Serial</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">buttonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pbIpOpen">
+        <property name="text">
+         <string>Connect</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
@@ -515,4 +567,7 @@ background: #eeeeee;
   <include location="graphics.qrc"/>
  </resources>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

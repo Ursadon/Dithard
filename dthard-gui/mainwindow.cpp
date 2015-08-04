@@ -364,8 +364,8 @@ void MainWindow::on_battery_main_valueChanged(int value)
 {
 	int value_maximum = ui->battery_main->maximum();
 	int value_percent = value * 100 / value_maximum;
-	QString st_red = QString (
-				"QProgressBar::chunk {"
+    QString st_red = QString (
+                "QProgressBar::chunk {"
 				"background-color: #FF0000;"
 				"}"
 				"QProgressBar {"
@@ -501,16 +501,18 @@ void MainWindow::on_cb_acks_stateChanged(int arg1)
     }
 }
 
-void MainWindow::on_checkBox_2_stateChanged(int arg1)
+void MainWindow::on_rbSerial_clicked(bool checked)
 {
-    switch (arg1) {
-    case 2: // Enable
+    ui->comPortList->setEnabled(true);
+    ui->pbComPortOpen->setEnabled(true);
+    ui->pbIpOpen->setEnabled(false);
+    ui->leIPaddress->setEnabled(false);
+}
 
-        break;
-    case 0: // Disable
-
-        break;
-    default:
-        break;
-    }
+void MainWindow::on_rbIP_clicked(bool checked)
+{
+    ui->comPortList->setEnabled(false);
+    ui->pbComPortOpen->setEnabled(false);
+    ui->pbIpOpen->setEnabled(true);
+    ui->leIPaddress->setEnabled(true);
 }

@@ -32,7 +32,7 @@ public:
     int x_coord, y_coord;
 	unsigned int rx_crc_error_count, ack_num;
 	bool data_started, packet_started, sending;
-    bool port_opened;
+    bool port_opened, ip_connected;
     QList<QSerialPortInfo> serialPortInfoList;
     QQueue<QByteArray> tx_queue, tx_queue_urgency;
     QByteArray bytes;
@@ -61,6 +61,8 @@ private slots:
     void on_checkBox_stateChanged(int arg1);
     void on_cb_acks_stateChanged(int arg1);
     void on_checkBox_2_stateChanged(int arg1);
+    void on_rbSerial_clicked(bool checked);
+    void on_rbIP_clicked(bool checked);
 };
 
 #endif // MAINWINDOW_H
