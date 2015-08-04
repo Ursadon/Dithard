@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.0
+** Created by: Qt User Interface Compiler version 5.4.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -17,6 +17,7 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -45,9 +46,9 @@ public:
     QLabel *lbSignal_Strenght;
     QProgressBar *signal_strenght;
     QTableWidget *tableStatus;
-    QCheckBox *checkBox;
+    QCheckBox *cbRange;
     QCheckBox *cb_acks;
-    QCheckBox *checkBox_2;
+    QCheckBox *cbNoQueue;
     QGroupBox *groupBox_2;
     QWidget *gridLayoutWidget;
     QGridLayout *gridLayout_2;
@@ -57,6 +58,12 @@ public:
     QComboBox *comPortList;
     QRadioButton *rbSerial;
     QPushButton *pbIpOpen;
+    QWidget *horizontalLayoutWidget;
+    QHBoxLayout *horizontalLayout;
+    QLineEdit *leAddr;
+    QLineEdit *leCmd;
+    QLineEdit *leData;
+    QPushButton *pbCustomSend;
     QButtonGroup *buttonGroup;
 
     void setupUi(QMainWindow *MainWindow)
@@ -64,14 +71,14 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::NonModal);
-        MainWindow->resize(400, 350);
+        MainWindow->resize(400, 450);
         QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
-        MainWindow->setMinimumSize(QSize(400, 350));
-        MainWindow->setMaximumSize(QSize(400, 350));
+        MainWindow->setMinimumSize(QSize(400, 450));
+        MainWindow->setMaximumSize(QSize(400, 450));
         QFont font;
         font.setFamily(QStringLiteral("Segoe UI"));
         MainWindow->setFont(font);
@@ -224,12 +231,12 @@ public:
         tableStatus->verticalHeader()->setVisible(false);
         tableStatus->verticalHeader()->setDefaultSectionSize(20);
         tableStatus->verticalHeader()->setHighlightSections(false);
-        checkBox = new QCheckBox(centralWidget);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
-        checkBox->setGeometry(QRect(20, 180, 91, 17));
-        checkBox->setMouseTracking(false);
-        checkBox->setFocusPolicy(Qt::NoFocus);
-        checkBox->setChecked(false);
+        cbRange = new QCheckBox(centralWidget);
+        cbRange->setObjectName(QStringLiteral("cbRange"));
+        cbRange->setGeometry(QRect(20, 180, 91, 17));
+        cbRange->setMouseTracking(false);
+        cbRange->setFocusPolicy(Qt::NoFocus);
+        cbRange->setChecked(false);
         cb_acks = new QCheckBox(centralWidget);
         cb_acks->setObjectName(QStringLiteral("cb_acks"));
         cb_acks->setGeometry(QRect(140, 180, 91, 17));
@@ -237,17 +244,17 @@ public:
         cb_acks->setFocusPolicy(Qt::NoFocus);
         cb_acks->setChecked(true);
         cb_acks->setTristate(false);
-        checkBox_2 = new QCheckBox(centralWidget);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
-        checkBox_2->setGeometry(QRect(20, 200, 121, 17));
-        checkBox_2->setMouseTracking(false);
-        checkBox_2->setFocusPolicy(Qt::NoFocus);
+        cbNoQueue = new QCheckBox(centralWidget);
+        cbNoQueue->setObjectName(QStringLiteral("cbNoQueue"));
+        cbNoQueue->setGeometry(QRect(20, 200, 121, 17));
+        cbNoQueue->setMouseTracking(false);
+        cbNoQueue->setFocusPolicy(Qt::NoFocus);
         groupBox_2 = new QGroupBox(centralWidget);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        groupBox_2->setGeometry(QRect(20, 219, 211, 121));
+        groupBox_2->setGeometry(QRect(20, 219, 211, 131));
         gridLayoutWidget = new QWidget(groupBox_2);
         gridLayoutWidget->setObjectName(QStringLiteral("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(9, 9, 191, 111));
+        gridLayoutWidget->setGeometry(QRect(9, 9, 191, 118));
         gridLayout_2 = new QGridLayout(gridLayoutWidget);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -267,6 +274,7 @@ public:
         buttonGroup->setObjectName(QStringLiteral("buttonGroup"));
         buttonGroup->addButton(rbIP);
         rbIP->setObjectName(QStringLiteral("rbIP"));
+        rbIP->setFocusPolicy(Qt::NoFocus);
         rbIP->setChecked(true);
 
         gridLayout_2->addWidget(rbIP, 0, 0, 1, 1);
@@ -287,6 +295,7 @@ public:
         rbSerial = new QRadioButton(gridLayoutWidget);
         buttonGroup->addButton(rbSerial);
         rbSerial->setObjectName(QStringLiteral("rbSerial"));
+        rbSerial->setFocusPolicy(Qt::NoFocus);
 
         gridLayout_2->addWidget(rbSerial, 2, 0, 1, 1);
 
@@ -294,6 +303,44 @@ public:
         pbIpOpen->setObjectName(QStringLiteral("pbIpOpen"));
 
         gridLayout_2->addWidget(pbIpOpen, 1, 1, 1, 1);
+
+        horizontalLayoutWidget = new QWidget(centralWidget);
+        horizontalLayoutWidget->setObjectName(QStringLiteral("horizontalLayoutWidget"));
+        horizontalLayoutWidget->setGeometry(QRect(30, 350, 361, 80));
+        horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        leAddr = new QLineEdit(horizontalLayoutWidget);
+        leAddr->setObjectName(QStringLiteral("leAddr"));
+        sizePolicy.setHeightForWidth(leAddr->sizePolicy().hasHeightForWidth());
+        leAddr->setSizePolicy(sizePolicy);
+        leAddr->setMaximumSize(QSize(80, 16777215));
+        leAddr->setMaxLength(3);
+        leAddr->setAlignment(Qt::AlignCenter);
+
+        horizontalLayout->addWidget(leAddr);
+
+        leCmd = new QLineEdit(horizontalLayoutWidget);
+        leCmd->setObjectName(QStringLiteral("leCmd"));
+        leCmd->setMaximumSize(QSize(80, 16777215));
+        leCmd->setMaxLength(3);
+
+        horizontalLayout->addWidget(leCmd);
+
+        leData = new QLineEdit(horizontalLayoutWidget);
+        leData->setObjectName(QStringLiteral("leData"));
+        leData->setMinimumSize(QSize(170, 0));
+        leData->setMaxLength(256);
+
+        horizontalLayout->addWidget(leData);
+
+        pbCustomSend = new QPushButton(horizontalLayoutWidget);
+        pbCustomSend->setObjectName(QStringLiteral("pbCustomSend"));
+        pbCustomSend->setMaximumSize(QSize(60, 16777215));
+
+        horizontalLayout->addWidget(pbCustomSend);
 
         MainWindow->setCentralWidget(centralWidget);
 
@@ -346,15 +393,18 @@ public:
         ___qtablewidgetitem13->setText(QApplication::translate("MainWindow", "0", 0));
         tableStatus->setSortingEnabled(__sortingEnabled);
 
-        checkBox->setText(QApplication::translate("MainWindow", "RangeMeter", 0));
+        cbRange->setText(QApplication::translate("MainWindow", "RangeMeter", 0));
         cb_acks->setText(QApplication::translate("MainWindow", "Enable ACKs", 0));
-        checkBox_2->setText(QApplication::translate("MainWindow", "Disable TX Queue", 0));
+        cbNoQueue->setText(QApplication::translate("MainWindow", "Disable TX Queue", 0));
         groupBox_2->setTitle(QApplication::translate("MainWindow", "\320\241\320\262\321\217\320\267\321\214", 0));
         pbComPortOpen->setText(QApplication::translate("MainWindow", "Open", 0));
         rbIP->setText(QApplication::translate("MainWindow", "IP", 0));
+        leIPaddress->setText(QApplication::translate("MainWindow", "127.0.0.1", 0));
         comPortList->setCurrentText(QString());
         rbSerial->setText(QApplication::translate("MainWindow", "Serial", 0));
         pbIpOpen->setText(QApplication::translate("MainWindow", "Connect", 0));
+        leAddr->setText(QString());
+        pbCustomSend->setText(QApplication::translate("MainWindow", "Send", 0));
     } // retranslateUi
 
 };

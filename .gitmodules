@@ -1,0 +1,3 @@
+[submodule "libwakeproto"]
+	path = libwakeproto
+	url = https://github.com/Ursadon/libwakeproto

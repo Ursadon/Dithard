@@ -1,27 +1,24 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2013-02-28T10:19:51
+# Project created by QtCreator 2015-08-04T12:47:36
 #
 #-------------------------------------------------
 
-QT       += core gui serialport network
+QT       += core network
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       -= gui
 
-TARGET = dthard-gui
+TARGET = Dithard-server
+CONFIG   += console
+CONFIG   -= app_bundle
+
 TEMPLATE = app
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+    server.cpp
 
-HEADERS  += mainwindow.h
-
-FORMS    += mainwindow.ui
-
-OTHER_FILES +=
-
-RESOURCES += \
-    graphics.qrc
+HEADERS += \
+    server.h
 
 CONFIG(debug, debug|release) {
         LIBS += -L$$PWD/../libwakeproto/src/debug/ -lwakeproto

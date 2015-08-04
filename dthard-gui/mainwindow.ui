@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>350</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,13 +22,13 @@
   <property name="minimumSize">
    <size>
     <width>400</width>
-    <height>350</height>
+    <height>450</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>400</width>
-    <height>350</height>
+    <height>450</height>
    </size>
   </property>
   <property name="font">
@@ -401,7 +401,7 @@ background: #eeeeee;
      </property>
     </item>
    </widget>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="cbRange">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -448,7 +448,7 @@ background: #eeeeee;
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox_2">
+   <widget class="QCheckBox" name="cbNoQueue">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -473,7 +473,7 @@ background: #eeeeee;
       <x>20</x>
       <y>219</y>
       <width>211</width>
-      <height>121</height>
+      <height>131</height>
      </rect>
     </property>
     <property name="title">
@@ -485,7 +485,7 @@ background: #eeeeee;
        <x>9</x>
        <y>9</y>
        <width>191</width>
-       <height>111</height>
+       <height>118</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
@@ -510,6 +510,9 @@ background: #eeeeee;
       </item>
       <item row="0" column="0">
        <widget class="QRadioButton" name="rbIP">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="text">
          <string>IP</string>
         </property>
@@ -522,7 +525,11 @@ background: #eeeeee;
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLineEdit" name="leIPaddress"/>
+       <widget class="QLineEdit" name="leIPaddress">
+        <property name="text">
+         <string>127.0.0.1</string>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0">
        <widget class="QComboBox" name="comPortList">
@@ -542,6 +549,9 @@ background: #eeeeee;
       </item>
       <item row="2" column="0">
        <widget class="QRadioButton" name="rbSerial">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="text">
          <string>Serial</string>
         </property>
@@ -559,6 +569,82 @@ background: #eeeeee;
       </item>
      </layout>
     </widget>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>350</y>
+      <width>361</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="leAddr">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="maxLength">
+        <number>3</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="leCmd">
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="maxLength">
+        <number>3</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="leData">
+       <property name="minimumSize">
+        <size>
+         <width>170</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maxLength">
+        <number>256</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbCustomSend">
+       <property name="maximumSize">
+        <size>
+         <width>60</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Send</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>
